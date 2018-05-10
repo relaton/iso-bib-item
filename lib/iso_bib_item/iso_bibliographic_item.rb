@@ -170,7 +170,7 @@ module IsoBibItem
     def id(delim = '')
       contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       idstr = "#{contribs}#{delim}#{@docidentifier.project_number}"
-      unless @docidentifier.part_number.nil?
+      if @docidentifier.part_number&.size&.positive?
         idstr << "-#{@docidentifier.part_number}"
       end
       idstr

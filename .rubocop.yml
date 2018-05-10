@@ -1,0 +1,7 @@
+AllCops:
+  TargetRubyVersion: 2.4.0
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context', 'it', 'let']
+Style/Encoding:
+  Exclude:
+    - 'spec/**/*.rb'

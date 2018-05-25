@@ -112,7 +112,7 @@ module IsoBibItem
       @title         = args[:titles].map { |t| IsoLocalizedTitle.new(t) }
       @type          = args[:type]
       @status        = IsoDocumentStatus.new(args[:docstatus])
-      @workgroup     = IsoProjectGroup.new(args[:workgroup])
+      @workgroup     = IsoProjectGroup.new(args[:workgroup]) if args[:workgroup]
       @ics = args[:ics].map { |i| Ics.new(i) }
       if args[:copyright]
         @copyright = CopyrightAssociation.new(args[:copyright])
@@ -195,7 +195,7 @@ module IsoBibItem
         script.each { |s| builder.script s }
         abstract.each { |a| builder.abstract { a.to_xml(builder) } }
         status.to_xml builder
-        copyright.to_xml builder
+        copyright&.to_xml builder
         relations.each { |r| r.to_xml builder }
         if opts[:note]
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')

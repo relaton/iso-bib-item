@@ -35,7 +35,7 @@ module IsoBibItem
     def to_s
       ret = @title_main
       ret = "#{@title_intro} -- #{ret}" if @title_intro
-      ret = "#{ret} -- #{@title_part}" if @@title_part
+      ret = "#{ret} -- #{@title_part}" if @title_part
       ret
     end
 

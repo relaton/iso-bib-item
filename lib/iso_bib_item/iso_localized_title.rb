@@ -33,7 +33,10 @@ module IsoBibItem
 
     # @return [String]
     def to_s
-      "#{@title_intro} -- #{@title_main} -- #{@title_part}"
+      ret = @title_main
+      ret = "#{@title_intro} -- #{ret}" if @title_intro
+      ret = "#{ret} -- #{@title_part}" if @@title_part
+      ret
     end
 
     def to_xml(builder)

@@ -34,8 +34,8 @@ module IsoBibItem
     # @return [String]
     def to_s
       ret = @title_main
-      ret = "#{@title_intro} -- #{ret}" if @title_intro
-      ret = "#{ret} -- #{@title_part}" if @title_part
+      ret = "#{@title_intro} -- #{ret}" if @title_intro && !@title_intro.empty?
+      ret = "#{ret} -- #{@title_part}" if @title_part && !@title_part.empty?
       ret
     end
 

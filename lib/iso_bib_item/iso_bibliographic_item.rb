@@ -127,7 +127,7 @@ module IsoBibItem
       if lang
         @title.find { |t| t.language == lang }
       else
-        @title
+        @title || [""] # title is mandatory, supply at least empty element
       end
     end
 

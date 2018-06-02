@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'iso-bib-item'
   spec.version       = IsoBibItem::VERSION
   spec.authors       = ['Ribose Inc.']
-  spec.email         = ['android.2net@gmail.com']
+  spec.email         = ['open.source@ribose.com']
 
   spec.summary       = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
   spec.description   = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
@@ -28,6 +28,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'simplecov'
 
-  spec.add_dependency 'isoics'
+  spec.add_dependency 'isoics', '~> 0.1.6'
   spec.add_dependency 'nokogiri'
 end

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'iso-bib-item'
   spec.version       = IsoBibItem::VERSION
   spec.authors       = ['Ribose Inc.']
-  spec.email         = ['android.2net@gmail.com']
+  spec.email         = ['open.source@ribose.com']
 
   spec.summary       = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
   spec.description   = %(IsoBibItem: Ruby ISOXMLDOC impementation.)

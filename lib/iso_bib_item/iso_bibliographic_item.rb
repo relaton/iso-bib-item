@@ -55,6 +55,10 @@ module IsoBibItem
     def initialize(field:, group:, subgroup:)
       super fieldcode: field, groupcode: group, subgroupcode: subgroup
     end
+
+    def to_xml(builder)
+      builder.ics description
+    end
   end
 
   # Bibliographic item.
@@ -127,7 +131,7 @@ module IsoBibItem
       if lang
         @title.find { |t| t.language == lang }
       else
-        @title 
+        @title
       end
     end
 
@@ -149,12 +153,12 @@ module IsoBibItem
     end
 
     # @return [String]
-    def to_xml(builder = nil, **opts)
+    def to_xml(builder = nil, **opts, &block)
       if builder
-        render_xml builder, opts
+        render_xml builder, opts, &block
       else
         Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-          render_xml xml, opts
+          render_xml xml, opts, &block
         end.doc.root.to_xml
       end
     end
@@ -173,7 +177,7 @@ module IsoBibItem
       if @docidentifier.part_number&.size&.positive?
         idstr << "-#{@docidentifier.part_number}"
       end
-      idstr
+      idstr.strip
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -190,7 +194,7 @@ module IsoBibItem
             c.to_xml builder
           end
         end
-        builder.edition edition
+        builder.edition edition if edition
         language.each { |l| builder.language l }
         script.each { |s| builder.script s }
         abstract.each { |a| builder.abstract { a.to_xml(builder) } }
@@ -200,6 +204,8 @@ module IsoBibItem
         if opts[:note]
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end
+        ics.each { |i| i.to_xml builder }
+        yield(builder) if block_given?
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength

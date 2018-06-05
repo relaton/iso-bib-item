@@ -25,10 +25,12 @@ module IsoBibItem
     # @param script [String] script Iso15924 code
     def initialize(title_intro:, title_main:, title_part: nil, language:, script:)
       @title_intro = title_intro
-      @title_main  = title_main || "[ -- ]" # title cannot be nil
+      @title_main  = title_main
       @title_part  = title_part
       @language    = language
       @script      = script
+      @title_main = "[ -- ]" if @title_main.nil? || @title_main.empty?
+      # "[ -- ]" # title cannot be nil
     end
 
     # @return [String]

@@ -42,9 +42,9 @@ module IsoBibItem
     end
 
     # @return [String]
-    # def url
-    #   @uri.to_s
-    # end
+    def url
+      @uri.to_s
+    end
 
     def to_xml(builder)
       contacts.each { |contact| contact.to_xml builder }

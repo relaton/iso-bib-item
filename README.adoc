@@ -89,7 +89,7 @@ item = IsoBibItem::IsoBibliographicItem.new(
 
 [source,ruby]
 ----
-iso191152.title
+item.title
 [<IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2b30
   @language="en",
   @script="Latn",
@@ -103,7 +103,7 @@ iso191152.title
   @title_main="Métadonnées",
   @title_part="Partie 1: Principes de base">]
 
-iso191152.title(lang: "en")
+item.title(lang: "en")
 => <IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2b30
  @language="en",
  @script="Latn",
@@ -111,10 +111,10 @@ iso191152.title(lang: "en")
  @title_main="Metadata",
  @title_part="Part 1: Fundamentals">
 
-iso191152.title(lang: "en").to_s
+item.title(lang: "en").to_s
 => "Geographic information -- Metadata -- Part 1: Fundamentals"
 
-iso191152.abstract(lang: "en").to_s
+item.abstract(lang: "en").to_s
 => "ISO 19115-1:2014 defines the schema required for describing geographic information and services by means of metadata. It provides information about the identification, the extent, the quality, the spatial and temporal aspects, the content, the spatial reference, the portrayal, distribution, and other properties of digital geographic data and services.
 ...
 "
@@ -124,7 +124,7 @@ iso191152.abstract(lang: "en").to_s
 
 [source,ruby]
 ----
-iso191152.shortref
+item.shortref
 => "ISO 19115-1:2014"
 ----
 
@@ -132,13 +132,13 @@ iso191152.shortref
 
 [source,ruby]
 ----
-iso191152.url
+item.url
 => "https://www.iso.org/standard/53798.html"
 
-iso191152.url(:obp)
+item.url(:obp)
 => "https://www.iso.org/obp/ui/#!iso:std:53798:en"
 
-iso191152.url(:rss)
+item.url(:rss)
 => "https://www.iso.org/contents/data/standard/05/37/53798.detail.rss"
 ----
 
@@ -147,7 +147,7 @@ iso191152.url(:rss)
 
 [source,ruby]
 ----
-iso191152.ics
+item.ics
 [<IsoBibItem::Ics:0x007fd1d92334f0
   @code="35.240.70",
   @description="IT applications in science",
@@ -162,10 +162,10 @@ iso191152.ics
 
 [source,ruby]
 ----
-iso191152.dates
+item.dates
 => [<IsoBibItem::BibliographicDate:0x007fd1d92e33c8 @on=2014-01-04 00:00:00 +0100, @type="published">]
 
-iso191152.dates.filter(type: "published").first.on
+item.dates.filter(type: "published").first.on
 => 2014-01-04 00:00:00 +0100
 ----
 
@@ -173,23 +173,16 @@ iso191152.dates.filter(type: "published").first.on
 
 [source,ruby]
 ----
-iso191152.status
+item.status
 => <IsoBibItem::IsoDocumentStatus:0x007f983c3c2658
  @stage="60",
  @status=#<IsoBibItem::LocalizedString:0x007f983c3c2608 @content="Published", @language=[], @script=[]>,
  @substage="60">
-
-# Publish-pending document
-hit_collection[3].fetch.status
-=> #<IsoBibItem::IsoDocumentStatus:0x007f983ba5e148
- @stage="60",
- @status=#<IsoBibItem::LocalizedString:0x007f983ba5e0f8 @content="Under development", @language=[], @script=[]>,
- @substage="00">
 ----
 
 [source,ruby]
 ----
-wg = iso191152.workgroup
+wg = item.workgroup
 => <IsoBibItem::IsoProjectGroup:0x007f983e0d91b0
  @abbreviation=#<IsoBibItem::LocalizedString:0x007f983e0d8558 @content="ISO", @language=[], @script=[]>,
  @contacts=[],

@@ -9,11 +9,11 @@ require 'iso_bib_item/iso_project_group'
 require 'iso_bib_item/document_relation_collection'
 
 # Add filter method to Array.
-# class Array
-#   def filter(type:)
-#     select { |e| e.type == type }
-#   end
-# end
+class Array
+  def filter(type:)
+    select { |e| e.type == type }
+  end
+end
 
 module IsoBibItem
   # Iso document id.

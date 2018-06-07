@@ -1,14 +1,15 @@
-# IsoBibItem
+= IsoBibItem
 
 IsoBib is a Ruby gem that implements the https://github.com/riboseinc/isodoc-models#iso-bibliographic-item[IsoBibliographicItem model].
 
-## Installation
+== Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
+[source,ruby]
+----
 gem 'iso-bib-item'
-```
+----
 
 And then execute:
 
@@ -18,11 +19,12 @@ Or install it yourself as:
 
     $ gem install iso-bib-item
 
-## Usage
+== Usage
 
-```ruby
-require 'iso_bib_item'
+=== Create ISO bibliographic item
 
+[source,ruby]
+----
 item = IsoBibItem::IsoBibliographicItem.new(
   docid: { project_number: "19115", part_number: "1" },
   edition: "1",
@@ -81,7 +83,139 @@ item = IsoBibItem::IsoBibliographicItem.new(
     { type: "updates", identifier: "ISO 19115-1:2014/Amd 1:2018", url: "/standard/73118.html" }
   ]
 )
+----
 
+=== IsoBibliographicItem Localized Strings
+
+[source,ruby]
+----
+iso191152.title
+[<IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2b30
+  @language="en",
+  @script="Latn",
+  @title_intro="Geographic information",
+  @title_main="Metadata",
+  @title_part="Part 1: Fundamentals">,
+ <IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2ae0
+  @language="fr",
+  @script="Latn",
+  @title_intro="Information géographique",
+  @title_main="Métadonnées",
+  @title_part="Partie 1: Principes de base">]
+
+iso191152.title(lang: "en")
+=> <IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2b30
+ @language="en",
+ @script="Latn",
+ @title_intro="Geographic information",
+ @title_main="Metadata",
+ @title_part="Part 1: Fundamentals">
+
+iso191152.title(lang: "en").to_s
+=> "Geographic information -- Metadata -- Part 1: Fundamentals"
+
+iso191152.abstract(lang: "en").to_s
+=> "ISO 19115-1:2014 defines the schema required for describing geographic information and services by means of metadata. It provides information about the identification, the extent, the quality, the spatial and temporal aspects, the content, the spatial reference, the portrayal, distribution, and other properties of digital geographic data and services.
+...
+"
+----
+
+=== IsoBibliographicItem references
+
+[source,ruby]
+----
+iso191152.shortref
+=> "ISO 19115-1:2014"
+----
+
+=== IsoBibliographicItem URLs
+
+[source,ruby]
+----
+iso191152.url
+=> "https://www.iso.org/standard/53798.html"
+
+iso191152.url(:obp)
+=> "https://www.iso.org/obp/ui/#!iso:std:53798:en"
+
+iso191152.url(:rss)
+=> "https://www.iso.org/contents/data/standard/05/37/53798.detail.rss"
+----
+
+
+=== IsoBibliographicItem ICS
+
+[source,ruby]
+----
+iso191152.ics
+[<IsoBibItem::Ics:0x007fd1d92334f0
+  @code="35.240.70",
+  @description="IT applications in science",
+  @description_full="Information technology. Applications of information technology. IT applications in science.",
+  @fieldcode="35",
+  @groupcode="240",
+  @notes=[#<Isoics::Note:0x007fd1d9232f28 @ics_code=nil, @text="Including digital geographic information">],
+  @subgroupcode="70">]
+----
+
+=== IsoBibliographicItem BibliographicDates
+
+[source,ruby]
+----
+iso191152.dates
+=> [<IsoBibItem::BibliographicDate:0x007fd1d92e33c8 @on=2014-01-04 00:00:00 +0100, @type="published">]
+
+iso191152.dates.filter(type: "published").first.on
+=> 2014-01-04 00:00:00 +0100
+----
+
+=== IsoBibliographicItem DocumentStatus
+
+[source,ruby]
+----
+iso191152.status
+=> <IsoBibItem::IsoDocumentStatus:0x007f983c3c2658
+ @stage="60",
+ @status=#<IsoBibItem::LocalizedString:0x007f983c3c2608 @content="Published", @language=[], @script=[]>,
+ @substage="60">
+
+# Publish-pending document
+hit_collection[3].fetch.status
+=> #<IsoBibItem::IsoDocumentStatus:0x007f983ba5e148
+ @stage="60",
+ @status=#<IsoBibItem::LocalizedString:0x007f983ba5e0f8 @content="Under development", @language=[], @script=[]>,
+ @substage="00">
+----
+
+[source,ruby]
+----
+wg = iso191152.workgroup
+=> <IsoBibItem::IsoProjectGroup:0x007f983e0d91b0
+ @abbreviation=#<IsoBibItem::LocalizedString:0x007f983e0d8558 @content="ISO", @language=[], @script=[]>,
+ @contacts=[],
+ @identifiers=[],
+ @name=#<IsoBibItem::LocalizedString:0x007f983e0d8828 @content="International Organization for Standardization", @language=[], @script=[]>,
+ @technical_committe=#<IsoBibItem::IsoSubgroup:0x007f983e0d8148 @name="ISO/TC 211Geographic information/Geomatics", @number=211, @type="technicalCommittee">,
+ @uri=#<URI::Generic www.iso.org>>
+
+wg.uri
+=> <URI::Generic www.iso.org>
+----
+
+=== Document relations of a standard
+
+[source,ruby]
+----
+iso191152.relations
+=> [<IsoBibItem::DocumentRelation:0x007f983c3c2a18 @bib_locality=[], @identifier="ISO 19115:2003", @type="obsoletes", @url="/standard/26020.html">,
+ <IsoBibItem::DocumentRelation:0x007f983c3c2950 @bib_locality=[], @identifier="ISO 19115:2003/Cor 1:2006", @type="obsoletes", @url="/standard/44361.html">,
+ <IsoBibItem::DocumentRelation:0x007f983c3c28d8 @bib_locality=[], @identifier="ISO 19115-1:2014/Amd 1:2018", @type="updates", @url="/standard/73118.html">]
+----
+
+=== XML serialization
+
+[source,ruby]
+----
 item.to_xml
 =>"<bibitem type='international-standard' id='ISO19115-1'>
   <title format='text/plain' language='en' script='Latn'>Geographic information -- Metadata -- Part 1: Fundamentals</title>
@@ -182,18 +316,45 @@ item.to_xml
   </relation>
   <ics>IT applications in science</ics>
 </bibitem>"
-```
+----
 
-## Development
+== BibliographicItem
+
+The ISO standards use a subset of the generic bibliographic fields specified in the https://github.com/riboseinc/isodoc-models#iso-bibliographic-item[IsoBibliographicItem model]:
+
+* Title:
+** English; French
+** titleIntro; titleMain; titlePart
+* DocIdentifier:
+** project number; part number; technical committee document number
+* Source: the ISO page from which the standard may be purchased or downloaded
+* Type: IsoDocumentType (International Standard, Technical Specification, Technical Report, Publicly Available Specification, International Workshop Agreement, Guide)
+* Project Group:
+** Technical Committee, Subcommittee, Workgroup, Secretariat
+** Technical Committee Number, Subcommittee Number, Workgroup Number
+** Technical Committee Type, Subcommittee Type, Workgroup Type (e.g. JTC)
+** Organization:Name (ISO; other standards organisations, for standards jointly published with ISO)
+* ICS: refer https://www.iso.org/publication/PUB100033.html
+* Status
+** Stage, Substage
+* Edition
+* Date:Published
+* Abstract
+* Relations
+** Obsoletes, Updates
+
+All FormattedString instances are returned by default as  a text/plain string; if required, they are returned as a text/html string.
+
+== Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-## Contributing
+== Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/iso-bib-item.
 
-## License
+== License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

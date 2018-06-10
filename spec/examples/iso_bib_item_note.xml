@@ -46,5 +46,8 @@
     </bibitem>
   </relation>
   <note format="text/plain">ISO DATE: test note</note>
-  <ics>IT applications in science</ics>
+  <ics>
+    <code>35.240.70</code>
+    <text>IT applications in science</text>
+  </ics>
 </bibitem>

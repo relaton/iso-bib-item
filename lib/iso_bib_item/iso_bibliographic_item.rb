@@ -57,7 +57,10 @@ module IsoBibItem
     end
 
     def to_xml(builder)
-      builder.ics description
+      builder.ics do
+        builder.code code
+        builder.text_ description
+      end
     end
   end
 

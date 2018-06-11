@@ -127,6 +127,13 @@ module IsoBibItem
       @source = args[:source].map { |s| TypedUri.new(s) }
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  
+    # convert ISO nnn-1 reference into an All Parts reference: 
+    # remove title part components and abstract  
+    def to_all_parts
+      @title.each { |t| t.remove_part }
+      @abstract = []
+    end
 
     # @param lang [String] language code Iso639
     # @return [IsoBibItem::IsoLocalizedTitle]

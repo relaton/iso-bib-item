@@ -33,6 +33,10 @@ module IsoBibItem
       # "[ -- ]" # title cannot be nil
     end
 
+    def remove_part
+      @title_part = nil
+    end
+
     # @return [String]
     def to_s
       ret = @title_main

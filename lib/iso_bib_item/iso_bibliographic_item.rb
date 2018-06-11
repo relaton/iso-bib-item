@@ -34,6 +34,10 @@ module IsoBibItem
       @part_number    = part_number
     end
 
+    def remove_part
+      @part_number = nil
+    end
+
     def to_xml(builder)
       builder.docidentifier(project_number + '-' + part_number)
     end
@@ -133,6 +137,8 @@ module IsoBibItem
     def to_all_parts
       @title.each { |t| t.remove_part }
       @abstract = []
+      @docidentifier.remove_part
+      @allParts = true
     end
 
     # @param lang [String] language code Iso639
@@ -215,6 +221,7 @@ module IsoBibItem
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end
         ics.each { |i| i.to_xml builder }
+        builder.allParts "true" if @allParts
         yield(builder) if block_given?
       end
     end

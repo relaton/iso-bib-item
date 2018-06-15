@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 require 'isoics'
+require 'duplicate'
 require 'iso_bib_item/bibliographic_item'
 require 'iso_bib_item/iso_document_status'
 require 'iso_bib_item/iso_localized_title'
@@ -134,11 +135,24 @@ module IsoBibItem
   
     # convert ISO nnn-1 reference into an All Parts reference: 
     # remove title part components and abstract  
+    # TODO: make nnn-1 partOf relation of the redacted document
     def to_all_parts
+      me = Duplicate.duplicate(self)
+      @relations << DocumentRelation.new(type: "partOf", bibitem: me)
       @title.each { |t| t.remove_part }
       @abstract = []
       @docidentifier.remove_part
       @allParts = true
+    end
+
+    # convert ISO:yyyy reference to reference to most recent
+    # instance of reference, removing date-specific infomration:
+    # date of publication, abstracts. Make dated reference Instance relation
+    # of the redacated document
+    def to_most_recent_reference
+      @relations << DocumentRelation.new(type: "instance", bibitem: me)
+      @abstract = []
+      @dates = []
     end
 
     # @param lang [String] language code Iso639

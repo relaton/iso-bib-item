@@ -67,18 +67,23 @@ module IsoBibItem
 
     # @param type [String]
     # @param identifier [String]
-    def initialize(type:, identifier:, url:, bib_locality: [])
+    def initialize(type:, identifier:, url:, bib_locality: [], bibitem: nil)
       @type         = type
       @identifier   = identifier
       @url          = url
       @bib_locality = bib_locality
+      @bibitem      = bibitem
     end
 
     def to_xml(builder)
       builder.relation(type: type) do
-        builder.bibitem do
-          builder.formattedref identifier
-          builder.docidentifier identifier
+        if @bibitem.nil? 
+          builder.bibitem do
+            builder.formattedref identifier
+            builder.docidentifier identifier
+          end
+        else
+          @bibitem.to_xml(builder)
         end
         # builder.url url
       end

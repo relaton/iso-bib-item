@@ -150,6 +150,7 @@ module IsoBibItem
     # date of publication, abstracts. Make dated reference Instance relation
     # of the redacated document
     def to_most_recent_reference
+      me = Duplicate.duplicate(self)
       @relations << DocumentRelation.new(type: "instance", identifier: nil, url: nil, bibitem: me)
       @abstract = []
       @dates = []

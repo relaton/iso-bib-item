@@ -83,7 +83,7 @@ module IsoBibItem
             builder.docidentifier identifier
           end
         else
-          @bibitem.to_xml(builder)
+          @bibitem.to_xml(builder, {})
         end
         # builder.url url
       end

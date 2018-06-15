@@ -138,7 +138,7 @@ module IsoBibItem
     # TODO: make nnn-1 partOf relation of the redacted document
     def to_all_parts
       me = Duplicate.duplicate(self)
-      @relations << DocumentRelation.new(type: "partOf", bibitem: me)
+      @relations << DocumentRelation.new(type: "partOf", identifier: nil, url: nil, bibitem: me)
       @title.each { |t| t.remove_part }
       @abstract = []
       @docidentifier.remove_part
@@ -150,7 +150,7 @@ module IsoBibItem
     # date of publication, abstracts. Make dated reference Instance relation
     # of the redacated document
     def to_most_recent_reference
-      @relations << DocumentRelation.new(type: "instance", bibitem: me)
+      @relations << DocumentRelation.new(type: "instance", identifier: nil, url: nil, bibitem: me)
       @abstract = []
       @dates = []
     end

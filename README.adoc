@@ -1,5 +1,9 @@
 = IsoBibItem
 
+image:https://img.shields.io/gem/v/iso-bib-item.svg["Gem Version", link="https://rubygems.org/gems/iso-bib-item"]
+image:https://img.shields.io/travis/riboseinc/iso-bib-item/master.svg["Build Status", link="https://travis-ci.org/riboseinc/iso-bib-item"]
+image:https://codeclimate.com/github/riboseinc/iso-bib-item/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/iso-bib-item"]
+
 IsoBib is a Ruby gem that implements the https://github.com/riboseinc/isodoc-models#iso-bibliographic-item[IsoBibliographicItem model].
 
 == Installation

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    iso-bib-item (0.1.6)
+    iso-bib-item (0.1.7)
       duplicate
       isoics (~> 0.1.6)
       nokogiri

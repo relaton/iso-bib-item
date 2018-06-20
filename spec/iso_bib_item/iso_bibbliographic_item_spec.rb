@@ -73,7 +73,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
 
     file = 'spec/examples/iso_bib_item.xml'
     if File.exist? file
-      xml = File.read file
+      xml = File.read(file, encoding: 'UTF-8') 
     else
       xml = iso_bib_item.to_xml
       File.write file, xml
@@ -82,7 +82,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
 
     file = 'spec/examples/iso_bib_item_note.xml'
     if File.exist? file
-      xml = File.read file
+      xml = File.read(file, encoding: 'UTF-8')
     else
       xml = iso_bib_item.to_xml nil, note: 'test note'
       File.write file, xml

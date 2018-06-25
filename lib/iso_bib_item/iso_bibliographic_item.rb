@@ -181,9 +181,9 @@ module IsoBibItem
       year = if opts[:no_year] || pubdate.empty? then ""
              else ':' + pubdate&.first&.on&.year&.to_s
              end
-      year += ": All Parts" if opts[:all_parts] || @all_part
+      year += ": All Parts" if opts[:all_parts] || @all_parts
 
-      "#{id(' ')}#{year}"
+      "#{id(false, ' ')}#{year}"
     end
 
     # @param type [Symbol] type of url, can be :src/:obp/:rss
@@ -211,8 +211,8 @@ module IsoBibItem
       end
     end
 
-    def id(delim = '')
-      return nil unless @id_attribute
+    def id(attribute, delim = '')
+      return nil if attribute && !@id_attribute
       contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       idstr = "#{contribs}#{delim}#{@docidentifier.project_number}"
       if @docidentifier.part_number&.size&.positive?
@@ -222,7 +222,7 @@ module IsoBibItem
     end
 
     def render_xml(builder, **opts)
-      builder.send(:bibitem, type: type, id: id) do
+      builder.send(:bibitem, type: type, id: id(true)) do
         title.each { |t| t.to_xml builder }
         source.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder

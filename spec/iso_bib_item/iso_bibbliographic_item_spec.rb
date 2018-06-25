@@ -25,7 +25,7 @@ def generate_item
                      type: 'technicalCommittee', number: 211
                    } },
       ics:       [{ field: 35, group: 240, subgroup: 70 }],
-      dates:     [{ type: 'published', from: '2014-04' }],
+      dates:     [{ type: 'published', on: '2014-04' }],
       abstract:  [
         { content: 'ISO 19115-1:2014 defines the schema required for ...',
           language: 'en', script: 'Latn', type: 'plain' },

@@ -222,6 +222,9 @@ module IsoBibItem
     end
 
     def render_xml(builder, **opts)
+      attrs = { type: type }
+      attr_id = id(true)
+      attrs[:id] = attr_id if attr_id
       builder.send(:bibitem, type: type, id: id(true)) do
         title.each { |t| t.to_xml builder }
         source.each { |s| s.to_xml builder }

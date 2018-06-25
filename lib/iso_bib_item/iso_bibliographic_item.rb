@@ -130,14 +130,19 @@ module IsoBibItem
         @copyright = CopyrightAssociation.new(args[:copyright])
       end
       @source = args[:source].map { |s| TypedUri.new(s) }
+      @id_attribute = true
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    
+    def disable_id_attribute
+      @id_attribute = false
+    end
   
     # convert ISO nnn-1 reference into an All Parts reference: 
     # remove title part components and abstract  
-    # TODO: make nnn-1 partOf relation of the redacted document
     def to_all_parts
       me = Duplicate.duplicate(self)
+      me.disable_id_attribute
       @relations << DocumentRelation.new(type: "partOf", identifier: nil, url: nil, bibitem: me)
       @title.each { |t| t.remove_part }
       @abstract = []
@@ -151,6 +156,7 @@ module IsoBibItem
     # of the redacated document
     def to_most_recent_reference
       me = Duplicate.duplicate(self)
+      me.disable_id_attribute
       @relations << DocumentRelation.new(type: "instance", identifier: nil, url: nil, bibitem: me)
       @abstract = []
       @dates = []
@@ -203,6 +209,7 @@ module IsoBibItem
     end
 
     def id(delim = '')
+      return nil unless @id_attribute
       contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       idstr = "#{contribs}#{delim}#{@docidentifier.project_number}"
       if @docidentifier.part_number&.size&.positive?

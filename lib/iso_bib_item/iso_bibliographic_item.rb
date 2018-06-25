@@ -221,11 +221,15 @@ module IsoBibItem
       idstr.strip
     end
 
-    def render_xml(builder, **opts)
+    def xml_attrs(type)
       attrs = { type: type }
       attr_id = id(true)
       attrs[:id] = attr_id if attr_id
-      builder.send(:bibitem, type: type, id: id(true)) do
+      attrs
+    end
+
+    def render_xml(builder, **opts)
+      builder.send(:bibitem, xml_attrs(type)) do
         title.each { |t| t.to_xml builder }
         source.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder

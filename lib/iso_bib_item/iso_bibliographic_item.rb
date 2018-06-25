@@ -93,6 +93,7 @@ module IsoBibItem
     attr_reader :ics
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+
     # @param docid [Hash{project_number=>Integer, part_number=>Integer}]
     # @param titles [Array<Hash{title_intro=>String, title_main=>String,
     #   title_part=>String, language=>String, script=>String}>]
@@ -116,7 +117,9 @@ module IsoBibItem
     # @param relations [Array<Hash{type=>String, identifier=>String}>]
     def initialize(**args)
       super_args = args.select do |k|
-        %i[language script dates abstract contributors relations].include? k
+        %i[
+          id language script dates abstract contributors relations source
+        ].include? k
       end
       super(super_args)
       @docidentifier = IsoDocumentId.new args[:docid]
@@ -126,9 +129,7 @@ module IsoBibItem
       @status        = IsoDocumentStatus.new(args[:docstatus])
       @workgroup     = IsoProjectGroup.new(args[:workgroup]) if args[:workgroup]
       @ics = args[:ics].map { |i| Ics.new(i) }
-      if args[:copyright]
-        @copyright = CopyrightAssociation.new(args[:copyright])
-      end
+      @copyright = CopyrightAssociation.new args[:copyright] if args[:copyright]
       @source = args[:source].map { |s| TypedUri.new(s) }
       @id_attribute = true
     end
@@ -144,10 +145,11 @@ module IsoBibItem
       me = Duplicate.duplicate(self)
       me.disable_id_attribute
       @relations << DocumentRelation.new(type: "partOf", identifier: nil, url: nil, bibitem: me)
-      @title.each { |t| t.remove_part }
+
+      @title.each(&:remove_part)
       @abstract = []
       @docidentifier.remove_part
-      @allParts = true
+      @all_parts = true
     end
 
     # convert ISO:yyyy reference to reference to most recent
@@ -218,7 +220,6 @@ module IsoBibItem
       idstr.strip
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def render_xml(builder, **opts)
       builder.send(:bibitem, type: type, id: id) do
         title.each { |t| t.to_xml builder }
@@ -243,10 +244,9 @@ module IsoBibItem
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end
         ics.each { |i| i.to_xml builder }
-        builder.allParts "true" if @allParts
+        builder.allParts 'true' if @all_parts
         yield(builder) if block_given?
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   end
 end

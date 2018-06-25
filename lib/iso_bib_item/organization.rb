@@ -43,7 +43,7 @@ module IsoBibItem
     # @param abbreviation [String]
     # @param url [String]
     def initialize(name:, abbreviation: nil, url: nil)
-      super(url)
+      super(url: url)
       @name         = LocalizedString.new name
       @abbreviation = LocalizedString.new abbreviation
       @identifiers  = []

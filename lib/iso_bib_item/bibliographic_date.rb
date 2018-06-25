@@ -28,6 +28,10 @@ module IsoBibItem
       @to   = Time.strptime(to, '%Y-%d') if to
     end
 
+    # rubocop:disable Metric/AbcSize
+
+    # @param builder [Nokogiri::XML::Builder]
+    # @return [Nokogiri::XML::Builder]
     def to_xml(builder, **opts)
       builder.date(type: type) do
         if on
@@ -38,5 +42,6 @@ module IsoBibItem
         end
       end
     end
+    # rubocop:enable Metric/AbcSize
   end
 end

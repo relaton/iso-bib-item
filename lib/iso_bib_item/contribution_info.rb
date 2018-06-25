@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'iso_bib_item/person'
+
 # Isobib module
 module IsoBibItem
   # Contributor's role.
@@ -10,8 +12,9 @@ module IsoBibItem
     # @return [ContributorRoleType]
     attr_reader :type
 
-    # @param type [ContributorRoleType] allowed types "author", "editor",
+    # @param type [String] allowed types "author", "editor",
     #   "cartographer", "publisher"
+    # @param description [Array<String>]
     def initialize(type, description = [])
       @type = type
       @description = description.map { |d| FormattedString.new d }
@@ -20,9 +23,7 @@ module IsoBibItem
     def to_xml(builder)
       builder.role(type: type) do
         description.each do |d|
-          builder.description do |desc|
-            d.to_xml(desc)
-          end
+          builder.description { |desc| d.to_xml(desc) }
         end
       end
     end

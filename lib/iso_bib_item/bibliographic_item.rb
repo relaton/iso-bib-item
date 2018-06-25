@@ -83,6 +83,9 @@ module IsoBibItem
 
   # Bibliographic item
   class BibliographicItem
+    # @return [String]
+    attr_reader :id
+
     # @return [Array<IsoBibItem::FormattedString>]
     attr_reader :title
 
@@ -128,6 +131,11 @@ module IsoBibItem
     # @return [IsoBibItem::DocRelationCollection]
     attr_reader :relations
 
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+    # @param id [Arrat<IsoBibItem::DocumentIdentifier>]
+    # @param title [Array<IsoBibItem::FormattedString>]
     # @param language [Arra<String>]
     # @param script [Array<String>]
     # @param dates [Array<Hash{type=>String, from=>String, to=>String}>]
@@ -136,14 +144,16 @@ module IsoBibItem
     # @param abstract [Array<Hash{content=>String, language=>String,
     #   script=>String, type=>String}>]
     # @param relations [Array<Hash{type=>String, identifier=>String}>]
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def initialize(**args)
-      @title         = []
+      @id            = args[:id]
+      @title         = (args[:titles] || []).map { |t| FormattedString.new t }
       @docidentifier = []
-      @dates         = (args[:dates] || []).map { |d| BibliographicDate.new(d) }
-      @contributors  = (args[:contributors] || []).map do |c|
-        ContributionInfo.new(entity: Organization.new(c[:entity]),
-                             role:   c[:roles])
+      @dates         = (args[:dates] || []).map do |d|
+        d.is_a?(Hash) ? BibliographicDate.new(d) : d
+      end
+      @contributors = (args[:contributors] || []).map do |c|
+        e = c[:entity].is_a?(Hash) ? Organization.new(c[:entity]) : c[:entity]
+        ContributionInfo.new(entity: e, role: c[:roles])
       end
       @notes         = []
       @language      = args[:language]
@@ -152,13 +162,10 @@ module IsoBibItem
         FormattedString.new(a)
       end
       @relations = DocRelationCollection.new(args[:relations] || [])
+      @source = args[:source].map { |s| TypedUri.new(s) }
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
-
-    # @param docid [DocumentIdentifier]
-    # def add_docidentifier(docid)
-    #   @docidentifier << docid
-    # end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # @param lang [String] language code Iso639
     # @return [IsoBibItem::FormattedString, Array<IsoBibItem::FormattedString>]
@@ -168,6 +175,24 @@ module IsoBibItem
       else
         @abstract
       end
+    end
+
+    # @return [String]
+    def to_xml
+      Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+        xml.bibitem(id: id) do
+          title.each { |t| xml.title { t.to_xml xml } }
+          source.each { |s| s.to_xml xml }
+          dates.each { |d| d.to_xml xml }
+          contributors.each do |c|
+            xml.contributor do
+              c.role.each { |r| r.to_xml xml }
+              c.to_xml xml
+            end
+          end
+          language.each { |l| xml.language l }
+        end
+      end.doc.root.to_xml
     end
   end
 end

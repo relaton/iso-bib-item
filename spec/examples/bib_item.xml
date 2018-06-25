@@ -1,0 +1,49 @@
+<bibitem id="ISO/TC211">
+  <title format="plain" language="en" script="Latn">Geographic information</title>
+  <title format="plain" language="fr" script="Latn">Information géographique</title>
+  <source type="src">https://www.iso.org/standard/53798.html</source>
+  <source type="obp">https://www.iso.org/obp/ui/#!iso:std:53798:en</source>
+  <source type="rss">https://www.iso.org/contents/data/standard/05/37/53798.detail.rss</source>
+  <date type="published">
+    <from>2014</from>
+  </date>
+  <contributor>
+    <role type="publisher"/>
+    <organization>
+      <name>International Organization for Standardization</name>
+      <abbreviation>ISO</abbreviation>
+      <uri>www.iso.org</uri>
+    </organization>
+  </contributor>
+  <contributor>
+    <role type="author"/>
+    <person>
+      <name>
+        <completename language="en">A. Bierman</completename>
+      </name>
+      <affilation>
+        <organization>
+          <name>IETF</name>
+          <abbreviation>IETF</abbreviation>
+        </organization>
+      </affilation>
+    </person>
+  </contributor>
+  <contributor>
+    <role type="author"/>
+    <person>
+      <name>
+        <initial language="en">A.</initial>
+        <surname language="en">Bierman</surname>
+      </name>
+      <affilation>
+        <organization>
+          <name>IETF</name>
+          <abbreviation>IETF</abbreviation>
+        </organization>
+      </affilation>
+    </person>
+  </contributor>
+  <language>en</language>
+  <language>fr</language>
+</bibitem>

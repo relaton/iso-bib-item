@@ -81,7 +81,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
                      type: 'technicalCommittee', number: 211
                    } },
       ics:       [{ field: 35, group: 240, subgroup: 70 }],
-      dates:     [{ type: 'published', from: '2014-04' }],
+      dates:     [{ type: 'published', on: '2014-04' }],
       abstract:  [
         { content: 'ISO 19115-1:2014 defines the schema required for ...',
           language: 'en', script: 'Latn', type: 'plain' },
@@ -129,25 +129,15 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     )
 
     file = 'spec/examples/iso_bib_item.xml'
-    if File.exist? file
-      xml = File.read(file, encoding: 'UTF-8') 
-    else
-      xml = iso_bib_item.to_xml
-      File.write file, xml
-    end
-    expect(iso_bib_item.to_xml).to eq xml
+    File.write file, iso_bib_item.to_xml unless File.exist? file
+    expect(iso_bib_item.to_xml).to eq File.read file, encoding: 'UTF-8'
 
     file = 'spec/examples/iso_bib_item_note.xml'
-    if File.exist? file
-      xml = File.read(file, encoding: 'UTF-8')
-    else
-      xml = iso_bib_item.to_xml nil, note: 'test note'
-      File.write file, xml
-    end
+    File.write file, iso_bib_item.to_xml unless File.exist? file
     xml_res = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |builder|
       iso_bib_item.to_xml builder, note: 'test note'
     end.doc.root.to_xml
-    expect(xml_res).to eq xml
+    expect(xml_res).to eq File.read file, encoding: 'UTF-8'
   end
 
   it "converts to all_parts reference" do

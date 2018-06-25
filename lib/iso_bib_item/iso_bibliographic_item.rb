@@ -177,10 +177,11 @@ module IsoBibItem
     # @todo need to add ISO/IEC/IEEE
     # @return [String]
     def shortref(**opts)
-      year = if opts[:all_parts] then ':All Parts'
-             elsif opts[:no_year] then ''
-             else ':' + @copyright.from&.year&.to_s
+      pubdate = dates.select { |d| d.type == "published" }
+      year = if opts[:no_year] || pubdate.empty? then ""
+             else ':' + pubdate&.first&.on&.year&.to_s
              end
+      year += ": All Parts" if opts[:all_parts] || @all_part
 
       "#{id(' ')}#{year}"
     end

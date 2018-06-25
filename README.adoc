@@ -57,7 +57,7 @@ item = IsoBibItem::IsoBibliographicItem.new(
     url: "www.iso.org", abbreviation: "ISO"
   }, roles: ["publisher"]}],
   workgroup: {
-    name=>"International Organization for Standardization",
+    name: "International Organization for Standardization",
     abbreviation: "ISO",
     url: "www.iso.org",
     technical_committee: {
@@ -203,11 +203,72 @@ wg.uri
 
 [source,ruby]
 ----
-iso191152.relations
+item.relations
 => [<IsoBibItem::DocumentRelation:0x007f983c3c2a18 @bib_locality=[], @identifier="ISO 19115:2003", @type="obsoletes", @url="/standard/26020.html">,
  <IsoBibItem::DocumentRelation:0x007f983c3c2950 @bib_locality=[], @identifier="ISO 19115:2003/Cor 1:2006", @type="obsoletes", @url="/standard/44361.html">,
  <IsoBibItem::DocumentRelation:0x007f983c3c28d8 @bib_locality=[], @identifier="ISO 19115-1:2014/Amd 1:2018", @type="updates", @url="/standard/73118.html">]
 ----
+
+=== Reference modification: convert to all parts reference
+
+In ISO, an All Parts reference is a reference to all parts of a standard. If a standard consists of parts,
+only those parts are referenced in the ISO web site (as retrieved by the isobib gem). A part reference is
+converted to an All Parts reference by making the part reference a partOf relation to a new reference,
+which strips the part number and part title of the original, and its abstract. The operation is destructive.
+
+[source,ruby]
+----
+item.to_all_parts
+item.title(lang: "en")
+=> <IsoBibItem::IsoLocalizedTitle:0x007fd1d92e2b30
+ @language="en",
+ @script="Latn",
+ @title_intro="Geographic information",
+ @title_main="Metadata",
+ @title_part=nil>
+item.shortref
+=> "ISO 19115:2014"
+item.relations.last
+=> <IsoBibItem::DocumentRelation:0x00007f94009a2158 @type="partOf", @identifier=nil, @url=nil, @bib_locality=[], 
+    @bibitem=#<IsoBibItem::IsoBibliographicItem:0x00007f94009f37d8 
+      @id=nil, 
+      @title=[#<IsoBibItem::IsoLocalizedTitle:0x00007f94009f3530 
+        @title_intro="Geographic information", 
+        @title_main="Metadata", 
+        @title_part="Part 1: Fundamentals", 
+        @language="en", 
+        @script="Latn">
+....
+----
+
+=== Reference modification: convert to most recent reference
+
+In ISO, an undated reference is interpreted as a _de dicto_ reference to the most recent instance of the
+reference; if the document is read after a new version of the reference has been issued, the reference is taken
+to refer to that new instance, even if that instance had not been published at the time the bibliography was authored.
+All references on the ISO web site (as retrieved by the isobib gem) are dated. A dated reference is
+converted to a Most Recent referece by making the dated reference an instance relation to a new reference,
+which strips the date of publication of the original, and its abstract. The operation is destructive.
+
+[source,ruby]
+----
+item.dates
+=> [#<IsoBibItem::BibliographicDate:0x00007f9994977680 @type="published", @on=2014-01-04 00:00:00 +1100>]
+item.to_most_recent_reference
+item.dates
+[]
+item.shortref
+=> "ISO 19115-1"
+item.relations.last
+=> <IsoBibItem::DocumentRelation:0x00007f9a33976a60 @type="instance", @identifier=nil, @url=nil, @bib_locality=[], 
+     @bibitem=#<IsoBibItem::IsoBibliographicItem:0x00007f9a3399ea60 
+     @id=nil, 
+     @title=[#<IsoBibItem::IsoLocalizedTitle:0x00007f9a3399e650 @title_intro="Geographic information", @title_main="Metadata", @title_part="Part 1: Fundamentals", @language="en", @script="Latn">, #<IsoBibItem::IsoLocalizedTitle:0x00007f9a3399e2e0 @title_intro="Information géographique", @title_main="Métadonnées", @title_part="Partie 1: Principes de base", @language="fr", @script="Latn">],
+     @docidentifier=#<IsoBibItem::IsoDocumentId:0x00007f9a3399e010 @project_number="19115", @part_number="1">, 
+     @dates=[#<IsoBibItem::BibliographicDate:0x00007f9a3399dd90 @type="published", @on=2014-01-04 00:00:00 +1100>], 
+....
+----
+
 
 === XML serialization
 

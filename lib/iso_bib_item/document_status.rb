@@ -13,6 +13,7 @@ module IsoBibItem
       @status = status
     end
 
+    # @param [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.status do
         # FormattedString.instance_method(:to_xml).bind(status).call builder

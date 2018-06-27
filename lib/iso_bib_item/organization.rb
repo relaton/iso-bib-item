@@ -49,17 +49,17 @@ module IsoBibItem
       @identifiers  = []
     end
 
-    # rubocop:disable Metrics/AbcSize
     # @return [String]
     def to_xml(builder)
       builder.organization do
         builder.name { |b| name.to_xml b }
-        builder.abbreviation { |a| abbreviation.to_xml a } if abbreviation
+        # unless abbreviati.content.nil? || abbreviation.content.empty?
+        builder.abbreviation { |a| abbreviation.to_xml a }
+        # end
         builder.uri uri.to_s if uri
         identifiers.each { |identifier| identifier.to_xml builder }
         super
       end
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end

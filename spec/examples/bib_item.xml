@@ -4,6 +4,7 @@
   <source type="src">https://www.iso.org/standard/53798.html</source>
   <source type="obp">https://www.iso.org/obp/ui/#!iso:std:53798:en</source>
   <source type="rss">https://www.iso.org/contents/data/standard/05/37/53798.detail.rss</source>
+  <docidentifier type="ISO">TC211</docidentifier>
   <date type="published">
     <from>2014</from>
   </date>
@@ -27,6 +28,14 @@
           <abbreviation>IETF</abbreviation>
         </organization>
       </affilation>
+      <address>
+        <street>Street</street>
+        <city>City</city>
+        <state>State</state>
+        <country>Country</country>
+        <postcode>123456</postcode>
+      </address>
+      <phone>223322</phone>
     </person>
   </contributor>
   <contributor>
@@ -42,8 +51,20 @@
           <abbreviation>IETF</abbreviation>
         </organization>
       </affilation>
+      <address>
+        <street>Street</street>
+        <city>City</city>
+        <state>State</state>
+        <country>Country</country>
+        <postcode>123456</postcode>
+      </address>
+      <phone>223322</phone>
     </person>
   </contributor>
   <language>en</language>
   <language>fr</language>
+  <status>standard</status>
+  <series type="main">
+    <title format="plain" language="en" script="Latn">ISO/IEC FDIS 10118-3</title>
+  </series>
 </bibitem>

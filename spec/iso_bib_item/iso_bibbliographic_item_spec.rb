@@ -41,7 +41,7 @@ def generate_item
         name: 'International Organization for Standardization',
         abbreviation: 'ISO', url: 'www.iso.org'
       }, from: '2014' },
-      source: [
+      link: [
         { type: 'src', content: 'https://www.iso.org/standard/53798.html' },
         { type: 'obp',
           content: 'https://www.iso.org/obp/ui/#!iso:std:53798:en' },
@@ -97,7 +97,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
         name: 'International Organization for Standardization',
         abbreviation: 'ISO', url: 'www.iso.org'
       }, from: '2014' },
-      source: [
+      link: [
         { type: 'src', content: 'https://www.iso.org/standard/53798.html' },
         { type: 'obp',
           content: 'https://www.iso.org/obp/ui/#!iso:std:53798:en' },
@@ -130,14 +130,14 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
 
     file = 'spec/examples/iso_bib_item.xml'
     File.write file, iso_bib_item.to_xml unless File.exist? file
-    expect(iso_bib_item.to_xml).to eq File.read file, encoding: 'UTF-8'
+    expect(iso_bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'UTF-8'
 
     file = 'spec/examples/iso_bib_item_note.xml'
     File.write file, iso_bib_item.to_xml unless File.exist? file
     xml_res = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |builder|
       iso_bib_item.to_xml builder, note: 'test note'
     end.doc.root.to_xml
-    expect(xml_res).to eq File.read file, encoding: 'UTF-8'
+    expect(xml_res).to be_equivalent_to File.read file, encoding: 'UTF-8'
   end
 
   it "converts to all_parts reference" do

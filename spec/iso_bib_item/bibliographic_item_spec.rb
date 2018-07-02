@@ -73,7 +73,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
         name: 'International Organization for Standardization',
         abbreviation: 'ISO', url: 'www.iso.org'
       }, from: '2014' },
-      source: [
+      link: [
         { type: 'src', content: 'https://www.iso.org/standard/53798.html' },
         { type: 'obp',
           content: 'https://www.iso.org/obp/ui/#!iso:std:53798:en' },
@@ -94,7 +94,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
     expect(bib_item.title).to be_instance_of Array
     file = 'spec/examples/bib_item.xml'
     File.write file, bib_item.to_xml unless File.exist? file
-    expect(bib_item.to_xml).to eq File.read file
+    expect(bib_item.to_xml).to be_equivalent_to File.read file
   end
 
   private

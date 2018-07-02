@@ -113,12 +113,12 @@ module IsoBibItem
     #   abbreviation=>String}, roles=>Array<String>}>]
     # @param copyright [Hash{owner=>Hash{name=>String, abbreviation=>String,
     #   url=>String}, form=>String, to=>String}]
-    # @param source [Array<Hash{type=>String, content=>String}>]
+    # @param link [Array<Hash{type=>String, content=>String}>]
     # @param relations [Array<Hash{type=>String, identifier=>String}>]
     def initialize(**args)
       super_args = args.select do |k|
         %i[
-          id language script dates abstract contributors relations source
+          id language script dates abstract contributors relations link
         ].include? k
       end
       super(super_args)
@@ -130,7 +130,7 @@ module IsoBibItem
       @workgroup     = IsoProjectGroup.new(args[:workgroup]) if args[:workgroup]
       @ics = args[:ics].map { |i| Ics.new(i) }
       @copyright = CopyrightAssociation.new args[:copyright] if args[:copyright]
-      @source = args[:source].map { |s| TypedUri.new(s) }
+      @link = args[:link].map { |s| TypedUri.new(s) }
       @id_attribute = true
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -189,7 +189,7 @@ module IsoBibItem
     # @param type [Symbol] type of url, can be :src/:obp/:rss
     # @return [String]
     def url(type = :src)
-      @source.find { |s| s.type == type.to_s }.content.to_s
+      @link.find { |s| s.type == type.to_s }.content.to_s
     end
 
     # @return [String]
@@ -231,7 +231,7 @@ module IsoBibItem
     def render_xml(builder, **opts)
       builder.send(:bibitem, xml_attrs(type)) do
         title.each { |t| t.to_xml builder }
-        source.each { |s| s.to_xml builder }
+        link.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder
         builder.docidentifier shortref(opts.merge(no_year: true))
         dates.each { |d| d.to_xml builder, opts }

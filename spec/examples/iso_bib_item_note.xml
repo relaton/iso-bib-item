@@ -1,9 +1,9 @@
 <bibitem type="international-standard" id="ISO1-2">
   <title format="text/plain" language="en" script="Latn">Geographic information -- Metadata -- Part 1: Fundamentals</title>
   <title format="text/plain" language="fr" script="Latn">Information géographique -- Métadonnées -- Information géographique</title>
-  <source type="src">https://www.iso.org/standard/53798.html</source>
-  <source type="obp">https://www.iso.org/obp/ui/#!iso:std:53798:en</source>
-  <source type="rss">https://www.iso.org/contents/data/standard/05/37/53798.detail.rss</source>
+  <link type="src">https://www.iso.org/standard/53798.html</link>
+  <link type="obp">https://www.iso.org/obp/ui/#!iso:std:53798:en</link>
+  <link type="rss">https://www.iso.org/contents/data/standard/05/37/53798.detail.rss</link>
   <docidentifier>ISO 1-2</docidentifier>
   <date type="published">
     <on>2014</on>

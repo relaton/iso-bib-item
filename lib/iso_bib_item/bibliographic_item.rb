@@ -77,7 +77,7 @@ module IsoBibItem
     end
 
     def to_xml(builder)
-      builder.source(content.to_s, type: type)
+      builder.link(content.to_s, type: type)
     end
   end
 
@@ -90,7 +90,7 @@ module IsoBibItem
     attr_reader :title
 
     # @return [Array<IsoBibItem::TypedUri>]
-    attr_reader :source
+    attr_reader :link
 
     # @return [IsoBibItem::BibItemType]
     attr_reader :type
@@ -162,7 +162,7 @@ module IsoBibItem
         FormattedString.new(a)
       end
       @relations = DocRelationCollection.new(args[:relations] || [])
-      @source = args[:source].map { |s| TypedUri.new(s) }
+      @link = args[:link].map { |s| TypedUri.new(s) }
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -182,7 +182,7 @@ module IsoBibItem
       Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
         xml.bibitem(id: id) do
           title.each { |t| xml.title { t.to_xml xml } }
-          source.each { |s| s.to_xml xml }
+          link.each { |s| s.to_xml xml }
           dates.each { |d| d.to_xml xml }
           contributors.each do |c|
             xml.contributor do

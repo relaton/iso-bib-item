@@ -95,10 +95,12 @@ module IsoBibItem
       @identifiers = []
     end
 
+    # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.person do
         name.to_xml builder
         affilation.each { |a| a.to_xml builder }
+        contacts.each { |contact| contact.to_xml builder }
       end
     end
   end

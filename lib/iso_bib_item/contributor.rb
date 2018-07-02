@@ -82,6 +82,7 @@ module IsoBibItem
       @description  = []
     end
 
+    # @params builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.affilation do
         builder.name { name.to_xml builder } if name
@@ -111,6 +112,7 @@ module IsoBibItem
       @uri.to_s
     end
 
+    # @params builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       contacts.each { |contact| contact.to_xml builder }
     end

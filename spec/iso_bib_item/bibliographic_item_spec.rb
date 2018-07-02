@@ -10,11 +10,16 @@ RSpec.describe IsoBibItem::BibliographicItem do
         { content: 'Geographic information', language: 'en', script: 'Latn' },
         { content: 'Information géographique', language: 'fr', script: 'Latn' }
       ],
+      docid: [
+        IsoBibItem::DocumentIdentifier.new(id: 'TC211', type: 'ISO')
+      ],
       edition:   '1',
       language:  %w[en fr],
       script:    ['Latn'],
       type:      'international-standard',
-      docstatus: { status: 'Published', stage: '60', substage: '60' },
+      docstatus: IsoBibItem::DocumentStatus.new(
+        IsoBibItem::LocalizedString.new('standard')
+      ),
       workgroup: { name: 'International Organization for Standardization',
                    abbreviation: 'ISO', url: 'www.iso.org/',
                    technical_committee: {
@@ -85,6 +90,14 @@ RSpec.describe IsoBibItem::BibliographicItem do
           url: 'https://www.iso.org/standard/26020.html' },
         { type: 'updates', identifier: 'ISO 19115:2003/Cor 1:2006',
           url: 'https://www.iso.org/standard/44361.html' }
+      ],
+      series: [
+        IsoBibItem::Series.new(
+          type: 'main',
+          title: IsoBibItem::FormattedString.new(
+            content: 'ISO/IEC FDIS 10118-3', language: 'en', script: 'Latn'
+          )
+        )
       ]
     )
   end

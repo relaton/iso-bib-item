@@ -45,7 +45,6 @@ module IsoBibItem
     # @param referenceFrom [IsoBibItem::LocalizedString]
     # @param referenceTo [IsoBibItem::LocalizedString]
     def initialize(type, reference_from, reference_to = nil)
-      type = "obsoletes" if type == "Now withdrawn"
       @type           = type
       @reference_from = reference_from
       @reference_to   = reference_to
@@ -69,6 +68,7 @@ module IsoBibItem
     # @param type [String]
     # @param identifier [String]
     def initialize(type:, identifier:, url:, bib_locality: [], bibitem: nil)
+      type = "obsoletes" if type == "Now withdrawn"
       @type         = type
       @identifier   = identifier
       @url          = url

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    iso-bib-item (0.1.10)
+    iso-bib-item (0.1.11)
       duplicate (~> 1.1.1)
       isoics (~> 0.1.6)
       nokogiri
@@ -20,7 +20,7 @@ GEM
     json (2.1.0)
     method_source (0.9.0)
     mini_portile2 (2.3.0)
-    nokogiri (1.8.3)
+    nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     pry (0.11.3)
       coderay (~> 1.1.0)

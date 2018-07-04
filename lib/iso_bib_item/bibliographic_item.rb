@@ -88,7 +88,7 @@ module IsoBibItem
     end
 
     def to_xml(builder)
-      builder.link(content.to_s, type: type)
+      builder.uri(content.to_s, type: type)
     end
   end
 

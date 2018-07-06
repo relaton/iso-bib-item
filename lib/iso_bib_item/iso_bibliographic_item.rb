@@ -8,6 +8,7 @@ require 'iso_bib_item/iso_document_status'
 require 'iso_bib_item/iso_localized_title'
 require 'iso_bib_item/iso_project_group'
 require 'iso_bib_item/document_relation_collection'
+require 'iso_bib_item/from_xml'
 
 # Add filter method to Array.
 class Array

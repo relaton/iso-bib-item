@@ -2,7 +2,7 @@
 
 require 'nokogiri'
 require 'isoics'
-require 'duplicate'
+require 'deep_clone'
 require 'iso_bib_item/bibliographic_item'
 require 'iso_bib_item/iso_document_status'
 require 'iso_bib_item/iso_localized_title'
@@ -143,7 +143,8 @@ module IsoBibItem
     # convert ISO nnn-1 reference into an All Parts reference: 
     # remove title part components and abstract  
     def to_all_parts
-      me = Duplicate.duplicate(self)
+      #me = Duplicate.duplicate(self)
+      me = DeepClone.clone(self)
       me.disable_id_attribute
       @relations << DocumentRelation.new(type: "partOf", identifier: nil, url: nil, bibitem: me)
 
@@ -158,7 +159,8 @@ module IsoBibItem
     # date of publication, abstracts. Make dated reference Instance relation
     # of the redacated document
     def to_most_recent_reference
-      me = Duplicate.duplicate(self)
+      #me = Duplicate.duplicate(self)
+      me = DeepClone.clone(self)
       me.disable_id_attribute
       @relations << DocumentRelation.new(type: "instance", identifier: nil, url: nil, bibitem: me)
       @abstract = []

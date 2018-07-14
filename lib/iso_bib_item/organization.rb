@@ -42,6 +42,7 @@ module IsoBibItem
     # @param name [String]
     # @param abbreviation [String]
     # @param url [String]
+    # @TODO identifier
     def initialize(name:, abbreviation: nil, url: nil)
       super(url: url)
       @name         = LocalizedString.new name
@@ -49,7 +50,7 @@ module IsoBibItem
       @identifiers  = []
     end
 
-    # @return [String]
+    # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.organization do
         builder.name { |b| name.to_xml b }

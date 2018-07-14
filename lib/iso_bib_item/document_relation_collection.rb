@@ -67,7 +67,7 @@ module IsoBibItem
 
     # @param type [String]
     # @param identifier [String]
-    def initialize(type:, identifier:, url:, bib_locality: [], bibitem: nil)
+    def initialize(type:, identifier:, url: nil, bib_locality: [], bibitem: nil)
       type = "obsoletes" if type == "Now withdrawn"
       @type         = type
       @identifier   = identifier
@@ -76,12 +76,13 @@ module IsoBibItem
       @bibitem      = bibitem
     end
 
+    # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.relation(type: type) do
         if @bibitem.nil? 
           builder.bibitem do
             builder.formattedref identifier
-            builder.docidentifier identifier
+            # builder.docidentifier identifier
           end
         else
           @bibitem.to_xml(builder, {})
@@ -95,7 +96,7 @@ module IsoBibItem
   class DocRelationCollection < Array
     # @param [Array<Hash{type=>String, identifier=>String}>]
     def initialize(relations)
-      super relations.map { |r| DocumentRelation.new(r) }
+      super relations.map { |r| r.is_a?(Hash) ? DocumentRelation.new(r) : r }
     end
 
     # @return [Array<IsoBibItem::DocumentRelation>]

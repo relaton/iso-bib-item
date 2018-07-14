@@ -4,14 +4,14 @@ require 'iso_bib_item/organization'
 
 module IsoBibItem
   # ISO project group.
-  class IsoProjectGroup < Organization
+  class IsoProjectGroup
     # @return [IsoBibItem::IsoSubgroup]
     attr_reader :technical_committee
 
-    # @return [IsoBibItem::soSubgroup]
+    # @return [IsoBibItem::IsoSubgroup]
     attr_reader :subcommittee
 
-    # @return [IsoBibItem::soSubgroup]
+    # @return [IsoBibItem::IsoSubgroup]
     attr_reader :workgroup
 
     # @return [String]
@@ -21,10 +21,30 @@ module IsoBibItem
     # @param url [String]
     # @param technical_commite [Hash{name=>String, type=>String,
     #   number=>Integer}]
-    def initialize(name:, abbreviation: nil, url:, technical_committee:)
-      super name: name, abbreviation: abbreviation, url: url
-      @technical_committe = IsoSubgroup.new(technical_committee)
+    # @param subcommittee [IsoBibItem::IsoSubgroup]
+    # @param workgroup [IsoBibItem::IsoSubgroup]
+    # @param secretariat [String]
+    def initialize(technical_committee:, **args)
+      @technical_committee = if technical_committee.is_a? Hash
+                               IsoSubgroup.new(technical_committee)
+                             else technical_committee end
+      @subcommittee        = args[:subcommittee]
+      @workgroup           = args[:workgroup]
+      @secretariat         = args[:secretariat]
     end
+
+    # rubocop:disable Metrics/AbcSize
+
+    # @param builder [Nokogiri::XML::Builder]
+    def to_xml(builder)
+      builder.editorialgroup do
+        builder.technical_committee { technical_committee.to_xml builder }
+        builder.subcommittee { subcommittee.to_xml builder } if subcommittee
+        builder.workgroup { workgroup.to_xml builder } if workgroup
+        builder.secretariat secretariat if secretariat
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
   end
 
   # ISO subgroup.
@@ -41,10 +61,17 @@ module IsoBibItem
     # @param name [String]
     # @param type [String]
     # @param number [Integer]
-    def initialize(name:, type:, number:)
+    def initialize(name:, type: nil, number: nil)
       @name   = name
       @type   = type
       @number = number
+    end
+
+    # @param builder [Nokogiri::XML::Builder]
+    def to_xml(builder)
+      builder.parent[:number] = number if number
+      builder.parent[:type] = type if type
+      builder.text name
     end
   end
 end

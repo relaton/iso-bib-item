@@ -58,7 +58,12 @@ module IsoBibItem
     # @param field [Integer]
     # @param group [Integer]
     # @param subgroup [Integer]
-    def initialize(field:, group:, subgroup:)
+    def initialize(code = nil, field: nil, group: nil, subgroup: nil)
+      unless code || field
+        raise ArgumentError, "wrong arguments (should be string or { fieldcode: [String] }"
+      end
+
+      field, group, subgroup = code.split '.' if code
       super fieldcode: field, groupcode: group, subgroupcode: subgroup
     end
 
@@ -69,6 +74,8 @@ module IsoBibItem
       end
     end
   end
+
+  # rubocop:disable Metrics/ClassLength
 
   # Bibliographic item.
   class IsoBibliographicItem < BibliographicItem
@@ -93,9 +100,8 @@ module IsoBibItem
     # @return [Array<IsoBibItem::Ics>]
     attr_reader :ics
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-
-    # @param docid [Hash{project_number=>Integer, part_number=>Integer}]
+    # @param docid [Hash{project_number=>Integer, part_number=>Integer},
+    #   IsoBibItem::IsoDocumentId]
     # @param titles [Array<Hash{title_intro=>String, title_main=>String,
     #   title_part=>String, language=>String, script=>String}>]
     # @param edition [String]
@@ -114,7 +120,7 @@ module IsoBibItem
     #   abbreviation=>String}, roles=>Array<String>}>]
     # @param copyright [Hash{owner=>Hash{name=>String, abbreviation=>String,
     #   url=>String}, form=>String, to=>String}]
-    # @param link [Array<Hash{type=>String, content=>String}>]
+    # @param link [Array<Hash{type=>String, content=>String}, IsoBibItem::TypedUri>]
     # @param relations [Array<Hash{type=>String, identifier=>String}>]
     def initialize(**args)
       super_args = args.select do |k|
@@ -123,24 +129,36 @@ module IsoBibItem
         ].include? k
       end
       super(super_args)
-      @docidentifier = IsoDocumentId.new args[:docid]
-      @edition       = args[:edition]
-      @title         = args[:titles].map { |t| IsoLocalizedTitle.new(t) }
-      @type          = args[:type]
-      @status        = IsoDocumentStatus.new(args[:docstatus])
-      @workgroup     = IsoProjectGroup.new(args[:workgroup]) if args[:workgroup]
-      @ics = args[:ics].map { |i| Ics.new(i) }
-      @copyright = CopyrightAssociation.new args[:copyright] if args[:copyright]
-      @link = args[:link].map { |s| TypedUri.new(s) }
+      @docidentifier = if args[:docid].is_a?(Hash)
+                         IsoDocumentId.new(args[:docid])
+                       else args[:docid] end
+      @edition = args[:edition]
+      @title   = args[:titles].map do |t|
+        t.is_a?(Hash) ? IsoLocalizedTitle.new(t) : t
+      end
+      @type   = args[:type]
+      @status = if args[:docstatus].is_a?(Hash)
+                  IsoDocumentStatus.new(args[:docstatus])
+                else args[:docstatus] end
+      if args[:workgroup]
+        @workgroup = if args[:workgroup].is_a?(Hash)
+                       IsoProjectGroup.new(args[:workgroup])
+                     else args[:workgroup] end
+      end
+      @ics = args[:ics].map { |i| i.is_a?(Hash) ? Ics.new(i) : i }
+      if args[:copyright]
+        @copyright = if args[:copyright].is_a?(Hash)
+                       CopyrightAssociation.new args[:copyright]
+                     else args[:copyright] end
+      end
+      @link = args[:link].map { |s| s.is_a?(Hash) ? TypedUri.new(s) : s }
       @id_attribute = true
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
-    
+
     def disable_id_attribute
       @id_attribute = false
     end
-  
-    # convert ISO nnn-1 reference into an All Parts reference: 
+
     # remove title part components and abstract  
     def to_all_parts
       #me = Duplicate.duplicate(self)
@@ -251,6 +269,7 @@ module IsoBibItem
         status.to_xml builder
         copyright&.to_xml builder
         relations.each { |r| r.to_xml builder }
+        workgroup.to_xml builder
         if opts[:note]
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end
@@ -260,4 +279,5 @@ module IsoBibItem
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

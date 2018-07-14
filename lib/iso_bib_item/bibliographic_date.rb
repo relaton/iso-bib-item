@@ -23,9 +23,9 @@ module IsoBibItem
     def initialize(type:, on: nil, from: nil, to: nil)
       raise ArgumentError, 'expected :on or :form argument' unless on || from
       @type = type
-      @on   = Time.strptime(on, '%Y-%d') if on
-      @from = Time.strptime(from, '%Y-%d') if from
-      @to   = Time.strptime(to, '%Y-%d') if to
+      @on   = parse_date on
+      @from = parse_date from
+      @to   = parse_date to
     end
 
     # rubocop:disable Metric/AbcSize
@@ -43,5 +43,17 @@ module IsoBibItem
       end
     end
     # rubocop:enable Metric/AbcSize
+
+    private
+
+    # @params date [String] 'yyyy' or 'yyyy-mm'
+    def parse_date(date)
+      return unless date
+      if date =~ /\d{4}/
+        Time.strptime date, '%Y'
+      else
+        Time.strptime date, '%Y-%m'
+      end
+    end
   end
 end

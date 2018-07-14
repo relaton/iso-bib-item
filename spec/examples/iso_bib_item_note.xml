@@ -22,7 +22,10 @@
   <script>Latn</script>
   <abstract format="plain" language="en" script="Latn">ISO 19115-1:2014 defines the schema required for ...</abstract>
   <abstract format="plain" language="fr" script="Latn">L'ISO 19115-1:2014 définit le schéma requis pour ...</abstract>
-  <status>Published</status>
+  <status>
+    <stage>60</stage>
+    <substage>60</substage>
+  </status>
   <copyright>
     <from>2014</from>
     <owner>
@@ -36,15 +39,16 @@
   <relation type="updates">
     <bibitem>
       <formattedref>ISO 19115:2003</formattedref>
-      <docidentifier>ISO 19115:2003</docidentifier>
     </bibitem>
   </relation>
   <relation type="updates">
     <bibitem>
       <formattedref>ISO 19115:2003/Cor 1:2006</formattedref>
-      <docidentifier>ISO 19115:2003/Cor 1:2006</docidentifier>
     </bibitem>
   </relation>
+  <editorialgroup>
+    <technical_committee number="211" type="technicalCommittee"> ISO/TC 211 Geographic information/Geomatics</technical_committee>
+  </editorialgroup>
   <note format="text/plain">ISO DATE: test note</note>
   <ics>
     <code>35.240.70</code>

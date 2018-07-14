@@ -111,7 +111,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
   end
 
   private
-   
+
   # @param content [String]
   # @return [IsoBibItem::LocalizedString]
   def localized_string(content, lang = 'en')

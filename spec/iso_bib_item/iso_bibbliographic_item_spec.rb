@@ -133,7 +133,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     expect(iso_bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'UTF-8'
 
     file = 'spec/examples/iso_bib_item_note.xml'
-    File.write file, iso_bib_item.to_xml unless File.exist? file
+    File.write file, iso_bib_item.to_xml(note: 'test note') unless File.exist? file
     xml_res = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |builder|
       iso_bib_item.to_xml builder, note: 'test note'
     end.doc.root.to_xml

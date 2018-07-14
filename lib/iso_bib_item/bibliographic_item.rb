@@ -59,7 +59,9 @@ module IsoBibItem
     # @param from [String] date
     # @param to [String] date
     def initialize(owner:, from:, to: nil)
-      @owner = ContributionInfo.new entity: Organization.new(owner)
+      @owner = if owner.is_a?(Hash)
+                 ContributionInfo.new entity: Organization.new(owner)
+               else owner end
       @from  = Time.strptime(from, '%Y') unless from.empty?
       @to    = Time.parse(to) if to
     end
@@ -169,18 +171,21 @@ module IsoBibItem
         d.is_a?(Hash) ? BibliographicDate.new(d) : d
       end
       @contributors = (args[:contributors] || []).map do |c|
-        e = c[:entity].is_a?(Hash) ? Organization.new(c[:entity]) : c[:entity]
-        ContributionInfo.new(entity: e, role: c[:roles])
+        if c.is_a? Hash
+          e = c[:entity].is_a?(Hash) ? Organization.new(c[:entity]) : c[:entity]
+          ContributionInfo.new(entity: e, role: c[:roles])
+        else c
+        end
       end
       @notes         = []
       @language      = args[:language]
       @script        = args[:script]
       @status        = args[:docstatus]
       @abstract      = (args[:abstract] || []).map do |a|
-        FormattedString.new(a)
+        a.is_a?(Hash) ? FormattedString.new(a) : a
       end
       @relations = DocRelationCollection.new(args[:relations] || [])
-      @link = args[:link].map { |s| TypedUri.new(s) }
+      @link = args[:link].map { |s| s.is_a?(Hash) ? TypedUri.new(s) : s }
       @series = args[:series]
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize

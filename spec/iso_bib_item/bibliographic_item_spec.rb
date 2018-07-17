@@ -110,6 +110,14 @@ RSpec.describe IsoBibItem::BibliographicItem do
     expect(bib_item.to_xml).to be_equivalent_to File.read file
   end
 
+  it 'create IsoBibliographicItem from XML' do
+    xml = File.read 'spec/examples/iso_bib_item.xml'
+    item = IsoBibItem.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
+
+
   private
 
   # @param content [String]

@@ -6,7 +6,7 @@ module IsoBibItem
       doc = Nokogiri::XML(xml)
       IsoBibliographicItem.new( 
         docid:        fetch_docid(doc),
-        edition:      doc.at('/bibiten/edition')&.text,
+        edition:      doc.at('/bibitem/edition')&.text,
         language:     doc.xpath('/bibitem/language').map(&:text),
         script:       doc.xpath('/bibitem/script').map(&:text),
         titles:       fetch_titles(doc),

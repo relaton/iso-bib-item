@@ -226,6 +226,7 @@ module IsoBibItem
 
     private
 
+    # @return [Array<IsoBibItem::ContributionInfo>]
     def publishers
       @contributors.select do |c|
         c.role.select { |r| r.type == 'publisher' }.any?

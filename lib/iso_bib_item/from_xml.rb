@@ -4,13 +4,13 @@ module IsoBibItem
   class << self
     def from_xml(xml)
       doc = Nokogiri::XML(xml)
-      IsoBibliographicItem.new(
+      IsoBibliographicItem.new( 
         docid:        fetch_docid(doc),
-        edition:      doc.at('//bibiten/edition')&.text,
-        language:     doc.xpath('//bibitem/language').map(&:text),
-        script:       doc.xpath('//bibitem/script').map(&:text),
+        edition:      doc.at('/bibiten/edition')&.text,
+        language:     doc.xpath('/bibitem/language').map(&:text),
+        script:       doc.xpath('/bibitem/script').map(&:text),
         titles:       fetch_titles(doc),
-        type:         doc.at('//bibitem')[:type],
+        type:         doc.at('bibitem')&.attr(:type),
         docstatus:    fetch_status(doc),
         ics:          fetch_ics(doc),
         dates:        fetch_dates(doc),
@@ -20,13 +20,13 @@ module IsoBibItem
         copyright:    fetch_copyright(doc),
         link:         fetch_link(doc),
         relations:    fetch_relations(doc)
-      )
+  )
     end
 
     private
 
     def fetch_docid(doc)
-      did = doc.at('//bibitem/docidentifier')
+      did = doc.at('/bibitem/docidentifier')
       return unless did
       id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
       IsoBibItem::IsoDocumentId.new project_number: id[:project],
@@ -34,7 +34,7 @@ module IsoBibItem
     end
 
     def fetch_titles(doc)
-      doc.xpath('//bibitem/title').map do |t|
+      doc.xpath('/bibitem/title').map do |t|
         titl = t.text.split ' -- '
         case titl.size
         when 0
@@ -59,42 +59,43 @@ module IsoBibItem
     end
 
     def fetch_status(doc)
-      status    = doc.at('//bibitem/status')
-      stage     = status.at('//stage')&.text
-      substage  = status.at('//substage')&.text
-      iteration = status.at('//iterarion')&.text&.to_i
+      status    = doc.at('/bibitem/status')
+      stage     = status&.at('stage')&.text
+      substage  = status&.at('substage')&.text
+      iteration = status&.at('iterarion')&.text&.to_i
       IsoDocumentStatus.new(status: status&.text, stage: stage,
                             substage: substage, iteration: iteration)
     end
 
     def fetch_ics(doc)
-      doc.xpath('//bibitem/ics/code').map { |ics| Ics.new ics.text }
+      doc.xpath('/bibitem/ics/code').map { |ics| Ics.new ics.text }
     end
 
     def fetch_dates(doc)
-      doc.xpath('//bibitem/date').map do |d|
-        BibliographicDate.new(type: d[:type], on: d.at('//on')&.text,
-                              from: d.at('//from')&.text,
-                              to: d.at('//to')&.text)
+      doc.xpath('/bibitem/date').map do |d|
+        BibliographicDate.new(type: d[:type], on: d.at('on')&.text,
+                              from: d.at('from')&.text,
+                              to: d.at('to')&.text)
       end
     end
 
     def fetch_contributors(doc)
-      doc.xpath('//bibitem/contributor').map do |c|
-        org = Organization.new(name: c.at('//name')&.text,
-                               abbreviation: c.at('//abbreviation')&.text,
-                               url: c.at('//uri')&.text)
-        ContributionInfo.new entity: org, role: [c.at('//role')[:type]]
+      doc.xpath('/bibitem/contributor').map do |c|
+        o = c.at 'organization'
+        org = Organization.new(name: o.at('name')&.text,
+                               abbreviation: o.at('abbreviation')&.text,
+                               url: o.at('uri')&.text)
+        ContributionInfo.new entity: org, role: [c.at('role')[:type]]
       end
     end
 
     # @TODO Organization doesn't recreated
     def fetch_workgroup(doc)
-      eg = doc.at('//bibitem/editorialgroup')
-      tc = eg.at('//technical_committee')
-      sc = eg.at('//subcommittee')
+      eg = doc.at('/bibitem/editorialgroup')
+      tc = eg.at('technical_committee')
+      sc = eg.at('subcommittee')
       scom = sc && iso_subgroup(cs)
-      wg   = eg.at('//workgroup')
+      wg   = eg.at('workgroup')
       wgrp = wg && iso_subgroup(wg)
       IsoProjectGroup.new(technical_committee: iso_subgroup(tc),
                           subcommittee: scom, workgroup: wgrp)
@@ -106,35 +107,35 @@ module IsoBibItem
     end
 
     def fetch_abstract(doc)
-      doc.xpath('//bibitem/abstract').map do |a|
+      doc.xpath('/bibitem/abstract').map do |a|
         FormattedString.new(content: a.text, language: a[:language],
                             script: a[:script], type: a[:format])
       end
     end
 
     def fetch_copyright(doc)
-      cp     = doc.at('//bibitem/copyright')
-      org    = cp.at('//owner/organization')
-      name   = org.at('//name').text
-      abbr   = org.at('//abbreviation').text
-      url    = org.at('//uri').text
+      cp     = doc.at('/bibitem/copyright')
+      org    = cp.at('owner/organization')
+      name   = org.at('name').text
+      abbr   = org.at('abbreviation').text
+      url    = org.at('uri')&.text
       entity = Organization.new(name: name, abbreviation: abbr, url: url)
-      from   = cp.at('//from').text
-      to     = cp.at('//to')&.text
+      from   = cp.at('from').text
+      to     = cp.at('to')&.text
       owner  = ContributionInfo.new entity: entity
       CopyrightAssociation.new(owner: owner, from: from, to: to)
     end
 
     def fetch_link(doc)
-      doc.xpath('//bibitem/uri').map do |l|
+      doc.xpath('/bibitem/uri').map do |l|
         TypedUri.new type: l[:type], content: l.text
       end
     end
 
     def fetch_relations(doc)
-      doc.xpath('//bibitem/relation').map do |r|
+      doc.xpath('/bibitem/relation').map do |r|
         DocumentRelation.new(type: r[:type],
-                             identifier: r.at('//formattedref').text)
+                             identifier: r.at('bibitem/formattedref').text)
       end
     end
   end

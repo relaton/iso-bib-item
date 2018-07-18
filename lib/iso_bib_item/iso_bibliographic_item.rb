@@ -270,7 +270,7 @@ module IsoBibItem
         status.to_xml builder
         copyright&.to_xml builder
         relations.each { |r| r.to_xml builder }
-        workgroup.to_xml builder
+        workgroup&.to_xml builder
         if opts[:note]
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end

@@ -94,7 +94,7 @@ module IsoBibItem
       eg = doc.at('/bibitem/editorialgroup')
       tc = eg&.at('technical_committee')
       sc = eg&.at('subcommittee')
-      scom = sc && iso_subgroup(cs)
+      scom = sc && iso_subgroup(sc)
       wg   = eg&.at('workgroup')
       wgrp = wg && iso_subgroup(wg)
       IsoProjectGroup.new(technical_committee: iso_subgroup(tc),

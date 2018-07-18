@@ -115,11 +115,11 @@ module IsoBibItem
     end
 
     def fetch_copyright(doc)
-      cp     = doc.at('/bibitem/copyright')
-      org    = cp.at('owner/organization')
-      name   = org.at('name').text
-      abbr   = org.at('abbreviation').text
-      url    = org.at('uri')&.text
+      cp     = doc.at('/bibitem/copyright') || return
+      org    = cp&.at('owner/organization')
+      name   = org&.at('name').text
+      abbr   = org&.at('abbreviation')&.text
+      url    = org&.at('uri')&.text
       entity = Organization.new(name: name, abbreviation: abbr, url: url)
       from   = cp.at('from').text
       to     = cp.at('to')&.text

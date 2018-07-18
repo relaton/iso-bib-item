@@ -30,6 +30,7 @@ module IsoBibItem
 
     # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
+      return unless content
       builder.parent['language'] = language.join(',') if language.any?
       builder.parent['script']   = script.join(',') if script.any?
       builder.text content

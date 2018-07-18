@@ -55,7 +55,7 @@ module IsoBibItem
       builder.organization do
         builder.name { |b| name.to_xml b }
         # unless abbreviati.content.nil? || abbreviation.content.empty?
-        builder.abbreviation { |a| abbreviation.to_xml a }
+        builder.abbreviation { |a| abbreviation.to_xml a } if abbreviation
         # end
         builder.uri uri.to_s if uri
         identifiers.each { |identifier| identifier.to_xml builder }

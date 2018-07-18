@@ -37,6 +37,7 @@ module IsoBibItem
 
     # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
+      return unless technical_committee || subcommittee || workgroup || secretariat
       builder.editorialgroup do
         builder.technical_committee { technical_committee.to_xml builder } if technical_committee
         builder.subcommittee { subcommittee.to_xml builder } if subcommittee

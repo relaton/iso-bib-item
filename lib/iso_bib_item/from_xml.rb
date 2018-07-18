@@ -92,10 +92,10 @@ module IsoBibItem
     # @TODO Organization doesn't recreated
     def fetch_workgroup(doc)
       eg = doc.at('/bibitem/editorialgroup')
-      tc = eg.at('technical_committee')
-      sc = eg.at('subcommittee')
+      tc = eg&.at('technical_committee')
+      sc = eg&.at('subcommittee')
       scom = sc && iso_subgroup(cs)
-      wg   = eg.at('workgroup')
+      wg   = eg&.at('workgroup')
       wgrp = wg && iso_subgroup(wg)
       IsoProjectGroup.new(technical_committee: iso_subgroup(tc),
                           subcommittee: scom, workgroup: wgrp)

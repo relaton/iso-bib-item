@@ -51,14 +51,14 @@ module IsoBibItem
 
     # @param builder [Nkogiri::XML::Builder]
     def to_xml(builder)
-      if stage
+      if stage.nil? || stage.empty?
+        super
+      else
         builder.status do
           builder.stage stage
           builder.substage substage if substage
           builder.iteration iteration if iteration
         end
-      else
-        super
       end
     end
   end

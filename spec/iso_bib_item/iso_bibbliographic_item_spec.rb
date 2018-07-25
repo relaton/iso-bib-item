@@ -5,7 +5,7 @@ require 'iso_bib_item/iso_bibliographic_item'
 
 def generate_item
     IsoBibItem::IsoBibliographicItem.new(
-      docid:  { project_number: 1, part_number: 2 },
+      docid:  { project_number: 1, part_number: 2, prefix: nil },
       titles: [
         { title_intro: 'Geographic information', title_main: 'Metadata',
           title_part: 'Part 1: Fundamentals', language: 'en', script: 'Latn' },

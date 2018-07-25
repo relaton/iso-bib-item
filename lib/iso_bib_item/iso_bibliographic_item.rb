@@ -29,11 +29,15 @@ module IsoBibItem
     # @return [Integer]
     attr_reader :part_number
 
+    # @return [Prefix]
+    attr_reader :prefix
+
     # @param project_number [Integer]
     # @param part_number [Integer]
-    def initialize(project_number:, part_number:)
+    def initialize(project_number:, part_number:, prefix:)
       @project_number = project_number
       @part_number    = part_number
+      @prefix         = prefix
     end
 
     def remove_part
@@ -100,7 +104,7 @@ module IsoBibItem
     # @return [Array<IsoBibItem::Ics>]
     attr_reader :ics
 
-    # @param docid [Hash{project_number=>Integer, part_number=>Integer},
+    # @param docid [Hash{project_number=>Integer, part_number=>Integer, prefix=>string},
     #   IsoBibItem::IsoDocumentId]
     # @param titles [Array<Hash{title_intro=>String, title_main=>String,
     #   title_part=>String, language=>String, script=>String}>]

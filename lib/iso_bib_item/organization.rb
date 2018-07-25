@@ -39,13 +39,17 @@ module IsoBibItem
     # @return [Array<IsoBibItem::OrgIdentifier>]
     attr_reader :identifiers
 
+    def hash2locstr(name)
+      name.is_a?(Hash) ? LocalizedString.new(name[:content], name[:language], name[:script]) : LocalizedString.new(name)
+    end
+
     # @param name [String]
     # @param abbreviation [String]
     # @param url [String]
     # @TODO identifier
     def initialize(name:, abbreviation: nil, url: nil)
       super(url: url)
-      @name         = LocalizedString.new name
+      @name = name.is_a?(Array) ? name.map { |n| hash2locstr(n) } : [hash2locstr(name)]
       @abbreviation = LocalizedString.new abbreviation
       @identifiers  = []
     end
@@ -53,7 +57,9 @@ module IsoBibItem
     # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.organization do
-        builder.name { |b| name.to_xml b }
+        name.each do |n|
+          builder.name { |b| n.to_xml b }
+        end
         builder.abbreviation { |a| abbreviation.to_xml a } if abbreviation&.to_s
         builder.uri uri.to_s if uri
         identifiers.each { |identifier| identifier.to_xml builder }

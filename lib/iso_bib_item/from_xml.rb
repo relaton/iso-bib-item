@@ -30,7 +30,8 @@ module IsoBibItem
       return unless did
       id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
       IsoBibItem::IsoDocumentId.new project_number: id[:project],
-                                    part_number:    id[:part]
+                                    part_number:    id[:part],
+                                    prefix:         nil
     end
 
     def fetch_titles(doc)

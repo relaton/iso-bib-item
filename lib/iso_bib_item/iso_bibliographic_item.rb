@@ -241,6 +241,7 @@ module IsoBibItem
       return nil if attribute && !@id_attribute
       contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       idstr = "#{contribs}#{delim}#{@docidentifier.project_number}"
+      idstr = "IEV" if @docidentifier.project_number == "IEV"
       if @docidentifier.part_number&.size&.positive?
         idstr << "-#{@docidentifier.part_number}"
       end

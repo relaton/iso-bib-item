@@ -28,6 +28,7 @@ module IsoBibItem
     def fetch_docid(doc)
       did = doc.at('/bibitem/docidentifier')
       return unless did
+      did.text == "IEV" and return IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
       id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
       IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? nil : id[:project],
                                     part_number:    id.nil? ? nil : id[:part],

@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
   spec.description   = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
   spec.homepage      = 'https://github.com/riboseinc/gdbib'
-  spec.license       = 'MIT'
+  spec.license       = 'BSD-2-Clause'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

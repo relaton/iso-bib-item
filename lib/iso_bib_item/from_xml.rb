@@ -123,7 +123,7 @@ module IsoBibItem
       abbr   = org&.at('abbreviation')&.text
       url    = org&.at('uri')&.text
       entity = Organization.new(name: name, abbreviation: abbr, url: url)
-      from   = cp.at('from').text
+      from   = cp.at('from')&.text
       to     = cp.at('to')&.text
       owner  = ContributionInfo.new entity: entity
       CopyrightAssociation.new(owner: owner, from: from, to: to)

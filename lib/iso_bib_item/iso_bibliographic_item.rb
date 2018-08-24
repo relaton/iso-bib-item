@@ -249,7 +249,7 @@ module IsoBibItem
       return nil if attribute && !@id_attribute
       #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       #idstr = "#{contribs}#{delim}#{id.project_number}"
-      idstr = iso_bibliographic_item.rb
+      idstr = id.project_number
       idstr = "IEV" if id.project_number == "IEV"
       if id.part_number&.size&.positive?
         idstr << "-#{id.part_number}"

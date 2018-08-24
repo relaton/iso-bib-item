@@ -247,8 +247,9 @@ module IsoBibItem
     def id(attribute, delim = '')
       id = @docidentifier[0]
       return nil if attribute && !@id_attribute
-      contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
-      idstr = "#{contribs}#{delim}#{id.project_number}"
+      #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
+      #idstr = "#{contribs}#{delim}#{id.project_number}"
+      idstr = iso_bibliographic_item.rb
       idstr = "IEV" if id.project_number == "IEV"
       if id.part_number&.size&.positive?
         idstr << "-#{id.part_number}"

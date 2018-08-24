@@ -32,12 +32,15 @@ module IsoBibItem
     # @return [Prefix]
     attr_reader :prefix
 
+    attr_reader :type
+
     # @param project_number [Integer]
     # @param part_number [Integer]
-    def initialize(project_number:, part_number:, prefix:)
+    def initialize(project_number:, part_number:, prefix:, type:)
       @project_number = project_number
       @part_number    = part_number
       @prefix         = prefix
+      @type           = type
     end
 
     def remove_part
@@ -45,7 +48,9 @@ module IsoBibItem
     end
 
     def to_xml(builder)
-      builder.docidentifier(project_number + '-' + part_number)
+      attrs = {}
+      attrs[:type] = @type if @type
+      builder.docidentifier project_number + '-' + part_number, **attrs
     end
   end
 

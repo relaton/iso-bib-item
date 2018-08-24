@@ -249,17 +249,17 @@ module IsoBibItem
       return nil if attribute && !@id_attribute
       #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       #idstr = "#{contribs}#{delim}#{id.project_number}"
-      idstr = id.project_number
+      idstr = id.project_number.to_s
       idstr = "IEV" if id.project_number == "IEV"
       if id.part_number&.size&.positive?
-        idstr << "-#{id.part_number}"
+        idstr += "-#{id.part_number}"
       end
       idstr.strip
     end
 
     def xml_attrs(type)
       attrs = { type: type }
-      attr_id = id(true)
+      attr_id = id(true)&.gsub(/ /, "")
       attrs[:id] = attr_id if attr_id
       attrs
     end

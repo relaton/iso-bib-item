@@ -270,7 +270,9 @@ module IsoBibItem
         link.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder
         @docidentifier.each do |i|
-          builder.docidentifier shortref(i, opts.merge(no_year: true))
+          attrs = {}
+          attrs[:type] = i.type if i.type
+          builder.docidentifier shortref(i, opts.merge(no_year: true)), **attrs
         end
         dates.each { |d| d.to_xml builder, opts }
         contributors.each do |c|

@@ -144,12 +144,12 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     iso_bib_item = generate_item
     expect(iso_bib_item.title.first.title_part).not_to be nil
     expect(iso_bib_item.relations.last.type).not_to eq "partOf"
-    expect(iso_bib_item.to_xml).not_to include "<allParts>true</allParts>"
+    expect(iso_bib_item.to_xml).not_to include "<allparts>true</allparts>"
     expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1-2\">"
     iso_bib_item.to_all_parts
     expect(iso_bib_item.relations.last.type).to eq "partOf"
     expect(iso_bib_item.title.first.title_part).to be nil
-    expect(iso_bib_item.to_xml).to include "<allParts>true</allParts>"
+    expect(iso_bib_item.to_xml).to include "<allparts>true</allparts>"
     expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1\">"
   end
 

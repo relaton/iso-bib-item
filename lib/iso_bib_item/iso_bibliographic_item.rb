@@ -280,7 +280,7 @@ module IsoBibItem
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end
         ics.each { |i| i.to_xml builder }
-        builder.allParts 'true' if @all_parts
+        builder.allparts 'true' if @all_parts
         yield(builder) if block_given?
       end
     end

@@ -208,14 +208,14 @@ module IsoBibItem
 
     # @todo need to add ISO/IEC/IEEE
     # @return [String]
-    def shortref(**opts)
+    def shortref(identifier, **opts)
       pubdate = dates.select { |d| d.type == "published" }
       year = if opts[:no_year] || pubdate.empty? then ""
              else ':' + pubdate&.first&.on&.year&.to_s
              end
       year += ": All Parts" if opts[:all_parts] || @all_parts
 
-      "#{id(false, ' ')}#{year}"
+      "#{makeid(identifier, false, ' ')}#{year}"
     end
 
     # @param type [Symbol] type of url, can be :src/:obp/:rss
@@ -244,9 +244,9 @@ module IsoBibItem
       end
     end
 
-    def id(attribute, delim = '')
-      id = @docidentifier[0]
+    def makeid(id, attribute, delim = '')
       return nil if attribute && !@id_attribute
+      id = @docidentifier.reject { |i| i.type == "DOI" }[0] unless id
       #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       #idstr = "#{contribs}#{delim}#{id.project_number}"
       idstr = id.project_number.to_s
@@ -259,7 +259,7 @@ module IsoBibItem
 
     def xml_attrs(type)
       attrs = { type: type }
-      attr_id = id(true)&.gsub(/ /, "")
+      attr_id = makeid(nil, true)&.gsub(/ /, "")
       attrs[:id] = attr_id if attr_id
       attrs
     end
@@ -269,7 +269,9 @@ module IsoBibItem
         title.each { |t| t.to_xml builder }
         link.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder
-        builder.docidentifier shortref(opts.merge(no_year: true))
+        @docidentifier.each do |i|
+          builder.docidentifier shortref(i, opts.merge(no_year: true))
+        end
         dates.each { |d| d.to_xml builder, opts }
         contributors.each do |c|
           builder.contributor do

@@ -119,7 +119,7 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     expect(iso_bib_item).to be_instance_of IsoBibItem::IsoBibliographicItem
     expect(iso_bib_item.title).to be_instance_of Array
     expect(iso_bib_item.title(lang: 'en').title_main).to eq 'Metadata'
-    expect(iso_bib_item.shortref).to eq 'ISO 1-2:2014'
+    expect(iso_bib_item.shortref(nil)).to eq 'ISO 1-2:2014'
     expect(iso_bib_item.url).to eq 'https://www.iso.org/standard/53798.html'
     expect(iso_bib_item.url(:rss)).to eq 'https://www.iso.org/contents/data/'\
                                          'standard/05/37/53798.detail.rss'

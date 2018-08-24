@@ -32,11 +32,12 @@ module IsoBibItem
     # @return [Prefix]
     attr_reader :prefix
 
+    # @return [Prefix]
     attr_reader :type
 
     # @param project_number [Integer]
     # @param part_number [Integer]
-    def initialize(project_number:, part_number:, prefix:, type:)
+    def initialize(project_number:, part_number:, prefix:, type: nil)
       @project_number = project_number
       @part_number    = part_number
       @prefix         = prefix

@@ -31,7 +31,7 @@ module IsoBibItem
         #did = doc.at('/bibitem/docidentifier')
         type = did.at("./@type")
         if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
-        elsif type then ret << IsoBibItem::DocumentIdentifier(id: did&.text, type: type.text)
+        elsif type then ret << IsoBibItem::DocumentIdentifier.new(id: did&.text, type: type.text)
         else
           id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
           ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? nil : id[:project],

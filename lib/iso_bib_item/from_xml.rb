@@ -26,13 +26,20 @@ module IsoBibItem
     private
 
     def fetch_docid(doc)
-      did = doc.at('/bibitem/docidentifier')
-      return unless did
-      did.text == "IEV" and return IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
-      id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
-      IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? nil : id[:project],
-                                    part_number:    id.nil? ? nil : id[:part],
-                                    prefix:         nil)
+      ret = []
+      doc.xpath("/bibitem/docidentifier").each do |did|
+        #did = doc.at('/bibitem/docidentifier')
+        type = did.at("./@type")
+        if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
+        elsif type then ret << IsoBibItem::DocumentIdentifier(id: did&.text, type: type.text)
+        else
+          id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
+          ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? nil : id[:project],
+                                               part_number:    id.nil? ? nil : id[:part],
+                                               prefix:         nil)
+        end
+      end
+      ret
     end
 
     def fetch_titles(doc)

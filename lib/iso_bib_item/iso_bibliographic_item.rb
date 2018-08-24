@@ -133,9 +133,10 @@ module IsoBibItem
         ].include? k
       end
       super(super_args)
-      @docidentifier = if args[:docid].is_a?(Hash)
-                         IsoDocumentId.new(args[:docid])
-                       else args[:docid] end
+      args[:docid] = [args[:docid]] unless args[:docid].is_a?(Array)
+      @docidentifier = args[:docid].map do |t|
+        t.is_a?(Hash) ?  IsoDocumentId.new(t) : t
+      end
       @edition = args[:edition]
       @title   = args[:titles].map do |t|
         t.is_a?(Hash) ? IsoLocalizedTitle.new(t) : t
@@ -172,7 +173,7 @@ module IsoBibItem
 
       @title.each(&:remove_part)
       @abstract = []
-      @docidentifier.remove_part
+      @docidentifier.each(&:remove_part)
       @all_parts = true
     end
 
@@ -238,12 +239,13 @@ module IsoBibItem
     end
 
     def id(attribute, delim = '')
+      id = @docidentifier[0]
       return nil if attribute && !@id_attribute
       contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
-      idstr = "#{contribs}#{delim}#{@docidentifier.project_number}"
-      idstr = "IEV" if @docidentifier.project_number == "IEV"
-      if @docidentifier.part_number&.size&.positive?
-        idstr << "-#{@docidentifier.part_number}"
+      idstr = "#{contribs}#{delim}#{id.project_number}"
+      idstr = "IEV" if id.project_number == "IEV"
+      if id.part_number&.size&.positive?
+        idstr << "-#{id.part_number}"
       end
       idstr.strip
     end

@@ -32,7 +32,7 @@ module IsoBibItem
         type = did.at("./@type")
         if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
         else
-          id = did.text.match(/(?<project>\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))$/)
+          id = did.text.match(/^(?<project>.*\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))$/)
           ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? did.text : id[:project],
                                                part_number:    id.nil? ? nil : id[:part],
                                                prefix:         nil,

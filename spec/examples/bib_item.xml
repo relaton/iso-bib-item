@@ -22,12 +22,12 @@
       <name>
         <completename language="en">A. Bierman</completename>
       </name>
-      <affilation>
+      <affiliation>
         <organization>
           <name>IETF</name>
           <abbreviation>IETF</abbreviation>
         </organization>
-      </affilation>
+      </affiliation>
       <address>
         <street>Street</street>
         <city>City</city>
@@ -45,12 +45,12 @@
         <initial language="en">A.</initial>
         <surname language="en">Bierman</surname>
       </name>
-      <affilation>
+      <affiliation>
         <organization>
           <name>IETF</name>
           <abbreviation>IETF</abbreviation>
         </organization>
-      </affilation>
+      </affiliation>
       <address>
         <street>Street</street>
         <city>City</city>

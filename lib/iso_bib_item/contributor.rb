@@ -84,7 +84,7 @@ module IsoBibItem
 
     # @params builder [Nokogiri::XML::Builder]
     def to_xml(builder)
-      builder.affilation do
+      builder.affiliation do
         builder.name { name.to_xml builder } if name
         description.each { |d| builder.description { d.to_xml builder } }
         organization.to_xml builder

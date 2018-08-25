@@ -42,7 +42,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
             name: IsoBibItem::FullName.new(
               completename: localized_string('A. Bierman')
             ),
-            affilation: [IsoBibItem::Affilation.new(
+            affiliation: [IsoBibItem::Affilation.new(
               IsoBibItem::Organization.new(name: 'IETF', abbreviation: 'IETF')
             )],
             contacts: [
@@ -60,7 +60,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
               initials: [localized_string('A.')],
               surname: localized_string('Bierman')
             ),
-            affilation: [IsoBibItem::Affilation.new(
+            affiliation: [IsoBibItem::Affilation.new(
               IsoBibItem::Organization.new(name: 'IETF', abbreviation: 'IETF')
             )],
             contacts: [

@@ -81,17 +81,17 @@ module IsoBibItem
     attr_accessor :name
 
     # @return [Array<IsoBibItem::Affilation>]
-    attr_accessor :affilation
+    attr_accessor :affiliation
 
     # @return [Array<IsoBibItem::PersonIdentifier>]
     attr_accessor :identifiers
 
     # @param name [IsoBibItem::FullName]
-    # @param affilation [Array<IsoBibItem::Affilation>]
-    def initialize(name:, affilation: [], contacts:)
+    # @param affiliation [Array<IsoBibItem::Affiliation>]
+    def initialize(name:, affiliation: [], contacts:)
       super(contacts: contacts)
       @name        = name
-      @affilation  = affilation
+      @affiliation  = affiliation
       @identifiers = []
     end
 
@@ -99,7 +99,7 @@ module IsoBibItem
     def to_xml(builder)
       builder.person do
         name.to_xml builder
-        affilation.each { |a| a.to_xml builder }
+        affiliation.each { |a| a.to_xml builder }
         contacts.each { |contact| contact.to_xml builder }
       end
     end

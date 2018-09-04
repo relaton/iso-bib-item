@@ -29,6 +29,9 @@ module IsoBibItem
     # @return [Integer]
     attr_reader :part_number
 
+    # @return [String]
+    attr_reader :id
+
     # @return [Prefix]
     attr_reader :prefix
 
@@ -37,21 +40,41 @@ module IsoBibItem
 
     # @param project_number [Integer]
     # @param part_number [Integer]
-    def initialize(project_number:, part_number:, prefix:, type: nil)
+    def initialize(project_number:, part_number:, prefix:, id:, type: nil)
       @project_number = project_number
       @part_number    = part_number
       @prefix         = prefix
       @type           = type
+      @id             = id
     end
 
+    # in docid manipulations, assume ISO as the default: id-part:year
     def remove_part
       @part_number = nil
+      case @type
+      when "Chinese Standard" then @id = @id.sub(/\.\d+/, "")
+      else 
+        @id = @id.sub(/-\d+/, "")
+      end
+    end
+
+    def remove_date
+      case @type
+      when "Chinese Standard" then @id = @id.sub(/-[12]\d\d\d/, "")
+      else
+        @id = @id.sub(/:[12]\d\d\d/, "")
+      end
+    end
+
+    def all_parts
+      @id = @id + " (all parts)"
     end
 
     def to_xml(builder)
       attrs = {}
       attrs[:type] = @type if @type
-      builder.docidentifier project_number + '-' + part_number, **attrs
+      # builder.docidentifier project_number + '-' + part_number, **attrs
+      builder.docidentifier id, **attrs
     end
   end
 
@@ -172,14 +195,13 @@ module IsoBibItem
 
     # remove title part components and abstract  
     def to_all_parts
-      #me = Duplicate.duplicate(self)
       me = DeepClone.clone(self)
       me.disable_id_attribute
       @relations << DocumentRelation.new(type: "partOf", identifier: nil, url: nil, bibitem: me)
-
       @title.each(&:remove_part)
       @abstract = []
       @docidentifier.each(&:remove_part)
+      @docidentifier.each(&:all_parts)
       @all_parts = true
     end
 
@@ -188,12 +210,12 @@ module IsoBibItem
     # date of publication, abstracts. Make dated reference Instance relation
     # of the redacated document
     def to_most_recent_reference
-      #me = Duplicate.duplicate(self)
       me = DeepClone.clone(self)
       me.disable_id_attribute
       @relations << DocumentRelation.new(type: "instance", identifier: nil, url: nil, bibitem: me)
       @abstract = []
       @dates = []
+      @docidentifier.each(&:remove_date)
     end
 
     # @param lang [String] language code Iso639
@@ -206,7 +228,6 @@ module IsoBibItem
       end
     end
 
-    # @todo need to add ISO/IEC/IEEE
     # @return [String]
     def shortref(identifier, **opts)
       pubdate = dates.select { |d| d.type == "published" }
@@ -249,11 +270,10 @@ module IsoBibItem
       id = @docidentifier.reject { |i| i.type == "DOI" }[0] unless id
       #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
       #idstr = "#{contribs}#{delim}#{id.project_number}"
-      idstr = id.project_number.to_s
+      #idstr = id.project_number.to_s
+      idstr = id.id.gsub(/:/, "-")
       idstr = "IEV" if id.project_number == "IEV"
-      if id.part_number&.size&.positive?
-        idstr += "-#{id.part_number}"
-      end
+      #if id.part_number&.size&.positive? then idstr += "-#{id.part_number}"
       idstr.strip
     end
 
@@ -272,7 +292,8 @@ module IsoBibItem
         @docidentifier.each do |i|
           attrs = {}
           attrs[:type] = i.type if i.type
-          builder.docidentifier shortref(i, opts.merge(no_year: true)), **attrs
+          # builder.docidentifier shortref(i, opts.merge(no_year: true)), **attrs
+          builder.docidentifier i.id, **attrs
         end
         dates.each { |d| d.to_xml builder, opts }
         contributors.each do |c|

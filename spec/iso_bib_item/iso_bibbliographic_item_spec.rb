@@ -5,7 +5,7 @@ require 'iso_bib_item/iso_bibliographic_item'
 
 def generate_item
     IsoBibItem::IsoBibliographicItem.new(
-      docid:  { project_number: "ISO 1", part_number: 2, prefix: nil },
+      docid:  { project_number: "ISO 1", part_number: 2, prefix: nil, id: "ISO 1-2:2014" },
       titles: [
         { title_intro: 'Geographic information', title_main: 'Metadata',
           title_part: 'Part 1: Fundamentals', language: 'en', script: 'Latn' },
@@ -119,7 +119,6 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     expect(iso_bib_item).to be_instance_of IsoBibItem::IsoBibliographicItem
     expect(iso_bib_item.title).to be_instance_of Array
     expect(iso_bib_item.title(lang: 'en').title_main).to eq 'Metadata'
-    expect(iso_bib_item.shortref(nil)).to eq 'ISO 1-2:2014'
     expect(iso_bib_item.url).to eq 'https://www.iso.org/standard/53798.html'
     expect(iso_bib_item.url(:rss)).to eq 'https://www.iso.org/contents/data/'\
                                          'standard/05/37/53798.detail.rss'
@@ -145,12 +144,12 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
     expect(iso_bib_item.title.first.title_part).not_to be nil
     expect(iso_bib_item.relations.last.type).not_to eq "partOf"
     expect(iso_bib_item.to_xml).not_to include "<allparts>true</allparts>"
-    expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1-2\">"
+    expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1-2-2014\">"
     iso_bib_item.to_all_parts
     expect(iso_bib_item.relations.last.type).to eq "partOf"
     expect(iso_bib_item.title.first.title_part).to be nil
     expect(iso_bib_item.to_xml).to include "<allparts>true</allparts>"
-    expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1\">"
+    expect(iso_bib_item.to_xml).to include "<bibitem type=\"international-standard\" id=\"ISO1-2014(allparts)\">"
   end
 
   it "converts to latest year reference" do

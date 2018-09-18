@@ -29,20 +29,28 @@ module IsoBibItem
     # @return [Integer]
     attr_reader :part_number
 
+    # @return [Integer]
+    attr_reader :subpart_number
+
     # @return [String]
     attr_reader :id
 
-    # @return [Prefix]
+    # @return [String]
     attr_reader :prefix
 
-    # @return [Prefix]
+    # @return [String]
     attr_reader :type
 
     # @param project_number [Integer]
     # @param part_number [Integer]
-    def initialize(project_number:, part_number:, prefix:, id:, type: nil)
+    # @param subpart_number [Integer]
+    # @param prefix [String]
+    # @param id [String]
+    # @param type [String]
+    def initialize(project_number:, part_number:, subpart_number: nil, prefix:, id:, type: nil)
       @project_number = project_number
       @part_number    = part_number
+      @subpart_number = subpart_number
       @prefix         = prefix
       @type           = type
       @id             = id
@@ -164,7 +172,7 @@ module IsoBibItem
       super(super_args)
       args[:docid] = [args[:docid]] unless args[:docid].is_a?(Array)
       @docidentifier = args[:docid].map do |t|
-        t.is_a?(Hash) ?  IsoDocumentId.new(t) : t
+        t.is_a?(Hash) ? IsoDocumentId.new(t) : t
       end
       @edition = args[:edition]
       @title   = args[:titles].map do |t|

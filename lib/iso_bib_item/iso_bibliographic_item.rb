@@ -59,6 +59,7 @@ module IsoBibItem
     # in docid manipulations, assume ISO as the default: id-part:year
     def remove_part
       @part_number = nil
+      @subpart_number = nil
       case @type
       when "Chinese Standard" then @id = @id.sub(/\.\d+/, "")
       else 

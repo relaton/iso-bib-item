@@ -21,25 +21,25 @@ module IsoBibItem
           copyright:    fetch_copyright(doc),
           link:         fetch_link(doc),
           relations:    fetch_relations(doc)
-    )
+        )
       end
 
       private
 
-    def fetch_docid(doc)
-      ret = []
-      doc.xpath("/bibitem/docidentifier").each do |did|
-        #did = doc.at('/bibitem/docidentifier')
-        type = did.at("./@type")
-        if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
-        else
-          id = did.text.match(/^(?<project>.*\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))(-(?<subpart>\d+))?$/)
-          ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? did.text : id[:project],
-                                               part_number:    id.nil? ? nil : id[:part],
-                                               subpart_number:    id.nil? ? nil : id[:subpart],
-                                               prefix:         nil,
-                                               id:             did.text,
-                                               type:           type&.text)
+      def fetch_docid(doc)
+        ret = []
+        doc.xpath("/bibitem/docidentifier").each do |did|
+          #did = doc.at('/bibitem/docidentifier')
+          type = did.at("./@type")
+          if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
+          else
+            id = did.text.match(/^(?<project>.*\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))$/)
+            ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? did.text : id[:project],
+                                                part_number:    id.nil? ? nil : id[:part],
+                                                prefix:         nil,
+                                                id:             did.text,
+                                                type:           type&.text)
+          end
         end
         ret
       end

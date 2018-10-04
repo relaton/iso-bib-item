@@ -26,6 +26,10 @@ module IsoBibItem
 
       private
 
+      def get_id(did)
+        id = did.text.match(/^(?<project>.*?\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
+      end
+
       def fetch_docid(doc)
         ret = []
         doc.xpath("/bibitem/docidentifier").each do |did|
@@ -33,12 +37,12 @@ module IsoBibItem
           type = did.at("./@type")
           if did.text == "IEV" then ret << IsoBibItem::IsoDocumentId.new(project_number: "IEV", part_number: nil, prefix: nil)
           else
-            id = did.text.match(/^(?<project>.*\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))$/)
+            id = get_id did
             ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? did.text : id[:project],
-                                                part_number:    id.nil? ? nil : id[:part],
-                                                prefix:         nil,
-                                                id:             did.text,
-                                                type:           type&.text)
+                                                 part_number:    id.nil? ? nil : id.named_captures[:part],
+                                                 prefix:         nil,
+                                                 id:             did.text,
+                                                 type:           type&.text)
           end
         end
         ret
@@ -93,7 +97,10 @@ module IsoBibItem
       def fetch_contributors(doc)
         doc.xpath('/bibitem/contributor').map do |c|
           o = c.at 'organization'
-          org = Organization.new(name: o.at('name')&.text,
+          names = o.xpath('name').map do |n|
+            { content: n.text, language: n[:language], script: n[:script] }
+          end
+          org = Organization.new(name: names,
                                 abbreviation: o.at('abbreviation')&.text,
                                 url: o.at('uri')&.text)
           ContributionInfo.new entity: org, role: [c.at('role')[:type]]

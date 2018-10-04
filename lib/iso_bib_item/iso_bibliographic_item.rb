@@ -8,7 +8,7 @@ require 'iso_bib_item/iso_document_status'
 require 'iso_bib_item/iso_localized_title'
 require 'iso_bib_item/iso_project_group'
 require 'iso_bib_item/document_relation_collection'
-require 'iso_bib_item/from_xml'
+require 'iso_bib_item/xml_parser'
 
 # Add filter method to Array.
 class Array
@@ -23,13 +23,13 @@ module IsoBibItem
     # @return [Integer]
     attr_reader :tc_document_number
 
-    # @return [Integer]
+    # @return [String]
     attr_reader :project_number
 
-    # @return [Integer]
+    # @return [String]
     attr_reader :part_number
 
-    # @return [Integer]
+    # @return [String]
     attr_reader :subpart_number
 
     # @return [String]
@@ -41,19 +41,19 @@ module IsoBibItem
     # @return [String]
     attr_reader :type
 
-    # @param project_number [Integer]
-    # @param part_number [Integer]
-    # @param subpart_number [Integer]
+    # @param project_number [String]
+    # @param part_number [String]
+    # @param subpart_number [String]
     # @param prefix [String]
     # @param id [String]
     # @param type [String]
-    def initialize(project_number:, part_number:, subpart_number: nil, prefix:, id:, type: nil)
-      @project_number = project_number
-      @part_number    = part_number
-      @subpart_number = subpart_number
-      @prefix         = prefix
-      @type           = type
-      @id             = id
+    def initialize(**args)
+      @project_number = args[:project_number]
+      @part_number    = args[:part_number]
+      @subpart_number = args[:subpart_number]
+      @prefix         = args[:prefix]
+      @type           = args[:type]
+      @id             = args[:id]
     end
 
     # in docid manipulations, assume ISO as the default: id-part:year

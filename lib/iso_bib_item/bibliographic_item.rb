@@ -133,7 +133,7 @@ module IsoBibItem
     attr_reader :formatted_ref
 
     # @!attribute [r] abstract
-    #   @return [Arra<IsoBibItem::FormattedString>]
+    #   @return [Array<IsoBibItem::FormattedString>]
 
     # @return [IsoBibItem::DocumentStatus]
     attr_reader :status
@@ -146,6 +146,9 @@ module IsoBibItem
 
     # @return [Array<IsoBibItem::Series>]
     attr_reader :series
+
+    # @return [Date]
+    attr_reader :fetched
 
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -163,6 +166,7 @@ module IsoBibItem
     #   script=>String, type=>String}>]
     # @param relations [Array<Hash{type=>String, identifier=>String}>]
     # @param series [Array<IsoBibItem::Series>]
+    # @param fetched [Date] default today
     def initialize(**args)
       @id            = args[:id]
       @title         = (args[:titles] || []).map { |t| FormattedString.new t }
@@ -187,6 +191,7 @@ module IsoBibItem
       @relations = DocRelationCollection.new(args[:relations] || [])
       @link = args[:link].map { |s| s.is_a?(Hash) ? TypedUri.new(s) : s }
       @series = args[:series]
+      @fetched = args.fetch :fetched, Date.today
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -207,6 +212,7 @@ module IsoBibItem
     def to_xml
       Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
         xml.bibitem(id: id) do
+          xml.fetched fetched
           title.each { |t| xml.title { t.to_xml xml } }
           link.each { |s| s.to_xml xml }
           docidentifier.each { |di| di.to_xml xml }

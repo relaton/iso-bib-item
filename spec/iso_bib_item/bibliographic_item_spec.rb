@@ -6,6 +6,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
   let(:bib_item) do
     IsoBibItem::BibliographicItem.new(
       id:     'ISO/TC211',
+      fetched: '2018-10-03',
       titles: [
         { content: 'Geographic information', language: 'en', script: 'Latn' },
         { content: 'Information géographique', language: 'fr', script: 'Latn' }

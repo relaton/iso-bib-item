@@ -27,7 +27,7 @@ module IsoBibItem
       private
 
       def get_id(did)
-        id = did.text.match(/^(?<project>.*?\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
+        did.text.match(/^(?<project>.*?\d+)(?<hyphen>-)?(?(<hyphen>)(?<part>\d*))/)
       end
 
       def fetch_docid(doc)
@@ -94,16 +94,50 @@ module IsoBibItem
         end
       end
 
+      def get_org(org)
+        names = org.xpath('name').map do |n|
+          { content: n.text, language: n[:language], script: n[:script] }
+        end
+        IsoBibItem::Organization.new(name: names,
+                                     abbreviation: org.at('abbreviation')&.text,
+                                     url: org.at('uri')&.text)
+      end
+
+      def get_person(person)
+        name = person.at './name/completename'
+        affilations = person.xpath('./affiliation').map do |a|
+          org = a.at './organization'
+          IsoBibItem::Affilation.new get_org(org)
+        end
+        contacts = person.xpath('./contact').map do |c|
+          if (addr = c.at './address')
+            streets = addr.xpath('./street').map(&:text)
+            IsoBibItem::Address.new(
+              street: streets,
+              city: addr.at('./city').text,
+              state: addr.at('./state').text,
+              country: addr.at('./country').text,
+              postcode: addr.at('./postcode').text
+            )
+          else
+            contact = c.child
+            IsoBibItem::Contact.new(type: contact[:name], value: contact.text)
+          end
+        end
+        completename = IsoBibItem::LocalizedString.new(name.text, name[:language])
+        IsoBibItem::Person.new(
+          name: IsoBibItem::FullName.new(completename: completename),
+          affiliation: affilations,
+          contacts: contacts
+        )
+      end
+
       def fetch_contributors(doc)
         doc.xpath('/bibitem/contributor').map do |c|
-          o = c.at 'organization'
-          names = o.xpath('name').map do |n|
-            { content: n.text, language: n[:language], script: n[:script] }
-          end
-          org = Organization.new(name: names,
-                                abbreviation: o.at('abbreviation')&.text,
-                                url: o.at('uri')&.text)
-          ContributionInfo.new entity: org, role: [c.at('role')[:type]]
+          entity = if (org = c.at './organization') then get_org(org)
+                   elsif (person = c.at './person') then get_person(person)
+                   end
+          IsoBibItem::ContributionInfo.new entity: entity, role: [c.at('role')[:type]]
         end
       end
 

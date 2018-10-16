@@ -39,7 +39,7 @@ module IsoBibItem
           else
             id = get_id did
             ret << IsoBibItem::IsoDocumentId.new(project_number: id.nil? ? did.text : id[:project],
-                                                 part_number:    id.nil? ? nil : id.named_captures[:part],
+                                                 part_number:    id.nil? ? nil : id[:part],
                                                  prefix:         nil,
                                                  id:             did.text,
                                                  type:           type&.text)

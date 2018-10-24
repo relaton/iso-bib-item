@@ -129,14 +129,18 @@ RSpec.describe IsoBibItem::IsoBibliographicItem do
 
     file = 'spec/examples/iso_bib_item.xml'
     File.write file, iso_bib_item.to_xml unless File.exist? file
-    expect(iso_bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'UTF-8'
+    xml = File.read file, encoding: 'UTF-8'
+    xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
+    expect(iso_bib_item.to_xml).to be_equivalent_to xml
 
     file = 'spec/examples/iso_bib_item_note.xml'
     File.write file, iso_bib_item.to_xml(note: 'test note') unless File.exist? file
     xml_res = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |builder|
       iso_bib_item.to_xml builder, note: 'test note'
     end.doc.root.to_xml
-    expect(xml_res).to be_equivalent_to File.read file, encoding: 'UTF-8'
+    xml = File.read file, encoding: 'UTF-8'
+    xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
+    expect(xml_res).to be_equivalent_to xml
   end
 
   it "converts to all_parts reference" do

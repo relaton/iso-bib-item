@@ -295,6 +295,7 @@ module IsoBibItem
 
     def render_xml(builder, **opts)
       builder.send(:bibitem, xml_attrs(type)) do
+        builder.fetched fetched
         title.each { |t| t.to_xml builder }
         link.each { |s| s.to_xml builder }
         # docidentifier.to_xml builder

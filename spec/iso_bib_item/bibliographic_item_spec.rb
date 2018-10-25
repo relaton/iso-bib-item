@@ -107,12 +107,12 @@ RSpec.describe IsoBibItem::BibliographicItem do
     expect(bib_item).to  be_instance_of IsoBibItem::BibliographicItem
     expect(bib_item.title).to be_instance_of Array
     file = 'spec/examples/bib_item.xml'
-    File.write file, bib_item.to_xml unless File.exist? file
-    expect(bib_item.to_xml).to be_equivalent_to File.read file
+    File.write file, bib_item.to_xml, encoding: 'utf-8' unless File.exist? file
+    expect(bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'utf-8'
   end
 
   it 'create IsoBibliographicItem from XML' do
-    xml = File.read 'spec/examples/iso_bib_item.xml'
+    xml = File.read 'spec/examples/iso_bib_item.xml', encoding: 'utf-8'
     xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
     item = IsoBibItem::XMLParser.from_xml xml
     expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem

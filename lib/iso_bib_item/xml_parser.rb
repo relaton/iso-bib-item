@@ -188,7 +188,7 @@ module IsoBibItem
       def fetch_relations(doc)
         doc.xpath('/bibitem/relation').map do |r|
           DocumentRelation.new(type: r[:type],
-                              identifier: r.at('bibitem/formattedref').text)
+                               identifier: r&.at('./bibitem/formattedref | ./bibitem/docidentifier')&.text)
         end
       end
     end

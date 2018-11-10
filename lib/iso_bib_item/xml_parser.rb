@@ -57,7 +57,7 @@ module IsoBibItem
           when 1
             intro, main, part = nil, titl[0], nil
           when 2
-            if /^(Part|Partie) \d+:/.match? titl[1]
+            if /^(Part|Partie) \d+:/.match titl[1]
               intro, main, part = nil, titl[0], titl[1]
             else
               intro, main, part = titl[0], titl[1], nil

@@ -49,8 +49,8 @@ module IsoBibItem
       end
 
       def fetch_titles(doc)
-        doc.xpath('/bibitem/title').map do |t|
-          titl = t.text.split ' -- '
+        doc.xpath("/bibitem/title").map do |t|
+          titl = t.text.sub("[ -- ]", "").split " -- "
           case titl.size
           when 0
             intro, main, part = nil, "", nil
@@ -95,49 +95,61 @@ module IsoBibItem
       end
 
       def get_org(org)
-        names = org.xpath('name').map do |n|
+        names = org.xpath("name").map do |n|
           { content: n.text, language: n[:language], script: n[:script] }
         end
+        identifiers = org.xpath("./identifier").map do |i|
+          IsoBibItem::OrgIdentifier.new(i[:type], i.text)
+        end
         IsoBibItem::Organization.new(name: names,
-                                     abbreviation: org.at('abbreviation')&.text,
-                                     url: org.at('uri')&.text)
+                                     abbreviation: org.at("abbreviation")&.text,
+                                     url: org.at("uri")&.text,
+                                     identifiers: identifiers)
       end
 
       def get_person(person)
-        name = person.at './name/completename'
-        affilations = person.xpath('./affiliation').map do |a|
-          org = a.at './organization'
+        name = person.at "./name/completename"
+        affilations = person.xpath("./affiliation").map do |a|
+          org = a.at "./organization"
           IsoBibItem::Affilation.new get_org(org)
         end
-        contacts = person.xpath('./contact').map do |c|
-          if (addr = c.at './address')
-            streets = addr.xpath('./street').map(&:text)
+
+        contacts = person.xpath("./address | ./phone | ./email | ./uri").map do |contact|
+          if contact.name == "address"
+            streets = contact.xpath("./street").map(&:text)
             IsoBibItem::Address.new(
               street: streets,
-              city: addr.at('./city').text,
-              state: addr.at('./state').text,
-              country: addr.at('./country').text,
-              postcode: addr.at('./postcode').text
+              city: contact.at("./city").text,
+              state: contact.at("./state").text,
+              country: contact.at("./country").text,
+              postcode: contact.at("./postcode").text,
             )
           else
-            contact = c.child
-            IsoBibItem::Contact.new(type: contact[:name], value: contact.text)
+            IsoBibItem::Contact.new(type: contact.name, value: contact.text)
           end
         end
+
+        identifiers = person.xpath("./identifier").map do |pi|
+          IsoBibItem::PersonIdentifier.new pi[:type], pi.text
+        end
+
         completename = IsoBibItem::LocalizedString.new(name.text, name[:language])
         IsoBibItem::Person.new(
           name: IsoBibItem::FullName.new(completename: completename),
           affiliation: affilations,
-          contacts: contacts
+          contacts: contacts,
+          identifiers: identifiers,
         )
       end
 
       def fetch_contributors(doc)
-        doc.xpath('/bibitem/contributor').map do |c|
-          entity = if (org = c.at './organization') then get_org(org)
-                   elsif (person = c.at './person') then get_person(person)
+        doc.xpath("/bibitem/contributor").map do |c|
+          entity = if (org = c.at "./organization") then get_org(org)
+                   elsif (person = c.at "./person") then get_person(person)
                    end
-          IsoBibItem::ContributionInfo.new entity: entity, role: [c.at('role')[:type]]
+          role_descr = c.xpath("./role/description").map &:text
+          IsoBibItem::ContributionInfo.new entity: entity,
+                                           role: [[c.at("role")[:type], role_descr]]
         end
       end
 
@@ -186,9 +198,20 @@ module IsoBibItem
       end
 
       def fetch_relations(doc)
-        doc.xpath('/bibitem/relation').map do |r|
-          DocumentRelation.new(type: r[:type],
-                               identifier: r&.at('./bibitem/formattedref | ./bibitem/docidentifier')&.text)
+        doc.xpath("/bibitem/relation").map do |r|
+          localities = r.xpath("./locality").map do |l|
+            ref_to = (rt = l.at("./referenceTo")) ? LocalizedString.new(rt.text) : nil
+            BibItemLocality.new(
+              l[:type],
+              LocalizedString.new(l.at("./referenceFrom").text),
+              ref_to
+            )
+          end
+          DocumentRelation.new(
+            type: r[:type],
+            identifier: r&.at("./bibitem/formattedref | ./bibitem/docidentifier")&.text,
+            bib_locality: localities,
+          )
         end
       end
     end

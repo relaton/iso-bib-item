@@ -15,9 +15,9 @@ module IsoBibItem
     # @param type [String] allowed types "author", "editor",
     #   "cartographer", "publisher"
     # @param description [Array<String>]
-    def initialize(type, description = [])
-      @type = type
-      @description = description.map { |d| FormattedString.new d }
+    def initialize(*args)
+      @type = args.fetch 0
+      @description = args.fetch(1, []).map { |d| FormattedString.new content: d, type: nil }
     end
 
     def to_xml(builder)
@@ -44,7 +44,7 @@ module IsoBibItem
     # @param role [Array<String>]
     def initialize(entity:, role: ['publisher'])
       @entity = entity
-      @role   = role.map { |r| ContributorRole.new(r) }
+      @role   = role.map { |r| ContributorRole.new(*r) }
     end
 
     def to_xml(builder)

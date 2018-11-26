@@ -1,0 +1,57 @@
+<bibitem type="international-standard" id="ISO1-2-2014">
+  <fetched>2018-10-21</fetched>
+  <title format="text/plain" language="en" script="Latn">Geographic information -- Metadata</title>
+  <title format="text/plain" language="fr" script="Latn">Information géographique -- Métadonnées</title>
+  <uri type="src">https://www.iso.org/standard/53798.html</uri>
+  <uri type="obp">https://www.iso.org/obp/ui/#!iso:std:53798:en</uri>
+  <uri type="rss">https://www.iso.org/contents/data/standard/05/37/53798.detail.rss</uri>
+  <docidentifier>ISO 1-2:2014</docidentifier>
+  <date type="published">
+    <on>2014</on>
+  </date>
+  <contributor>
+    <role type="publisher"/>
+    <organization>
+      <name>International Organization for Standardization</name>
+      <abbreviation>ISO</abbreviation>
+      <uri>www.iso.org</uri>
+    </organization>
+  </contributor>
+  <edition>1</edition>
+  <language>en</language>
+  <language>fr</language>
+  <script>Latn</script>
+  <abstract format="plain" language="en" script="Latn">ISO 19115-1:2014 defines the schema required for ...</abstract>
+  <abstract format="plain" language="fr" script="Latn">L'ISO 19115-1:2014 définit le schéma requis pour ...</abstract>
+  <status>
+    <stage>60</stage>
+    <substage>60</substage>
+  </status>
+  <copyright>
+    <from>2014</from>
+    <owner>
+      <organization>
+        <name>International Organization for Standardization</name>
+        <abbreviation>ISO</abbreviation>
+        <uri>www.iso.org</uri>
+      </organization>
+    </owner>
+  </copyright>
+  <relation type="updates">
+    <bibitem>
+      <formattedref>ISO 19115:2003</formattedref>
+    </bibitem>
+  </relation>
+  <relation type="updates">
+    <bibitem>
+      <formattedref>ISO 19115:2003/Cor 1:2006</formattedref>
+    </bibitem>
+  </relation>
+  <editorialgroup>
+    <technical_committee number="211" type="technicalCommittee"> ISO/TC 211 Geographic information/Geomatics</technical_committee>
+  </editorialgroup>
+  <ics>
+    <code>35.240.70</code>
+    <text>IT applications in science</text>
+  </ics>
+</bibitem>

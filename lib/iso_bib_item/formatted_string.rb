@@ -14,13 +14,13 @@ module IsoBibItem
     # @param type [String] the format type, default "plain"
     #   available types "plain", "html", "dockbook", "tei", "asciidoc",
     #   "markdown", "isodoc"
-    def initialize(content:, language:, script:, type: 'plain')
+    def initialize(content:, language: nil, script: nil, type: 'plain')
       super(content, language, script)
       @type = type
     end
 
     def to_xml(builder)
-      builder.parent['format'] = type
+      builder.parent["format"] = type if type
       super
     end
   end

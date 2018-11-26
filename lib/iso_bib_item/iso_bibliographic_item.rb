@@ -121,7 +121,7 @@ module IsoBibItem
 
   # Bibliographic item.
   class IsoBibliographicItem < BibliographicItem
-    # @return [IsoBibItem::IsoDocumentId]
+    # @return [Array<IsoBibItem::IsoDocumentId>]
     attr_reader :docidentifier
 
     # @return [String]
@@ -241,7 +241,7 @@ module IsoBibItem
     def shortref(identifier, **opts)
       pubdate = dates.select { |d| d.type == "published" }
       year = if opts[:no_year] || pubdate.empty? then ""
-             else ':' + pubdate&.first&.on&.year&.to_s
+             else ":" + pubdate&.first&.on&.year&.to_s
              end
       year += ": All Parts" if opts[:all_parts] || @all_parts
 
@@ -268,11 +268,11 @@ module IsoBibItem
     private
 
     # @return [Array<IsoBibItem::ContributionInfo>]
-    def publishers
-      @contributors.select do |c|
-        c.role.select { |r| r.type == 'publisher' }.any?
-      end
-    end
+    # def publishers
+    #   @contributors.select do |c|
+    #     c.role.select { |r| r.type == 'publisher' }.any?
+    #   end
+    # end
 
     def makeid(id, attribute, delim = '')
       return nil if attribute && !@id_attribute
@@ -298,13 +298,7 @@ module IsoBibItem
         builder.fetched fetched
         title.each { |t| t.to_xml builder }
         link.each { |s| s.to_xml builder }
-        # docidentifier.to_xml builder
-        @docidentifier.each do |i|
-          attrs = {}
-          attrs[:type] = i.type if i.type
-          # builder.docidentifier shortref(i, opts.merge(no_year: true)), **attrs
-          builder.docidentifier i.id, **attrs
-        end
+        docidentifier.each { |i| i.to_xml builder }
         dates.each { |d| d.to_xml builder, opts }
         contributors.each do |c|
           builder.contributor do

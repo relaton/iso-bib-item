@@ -73,6 +73,10 @@ module IsoBibItem
       @type  = type
       @value = value
     end
+
+    def to_xml(builder)
+      builder.identifier value, type: type
+    end
   end
 
   # Person class.
@@ -88,11 +92,11 @@ module IsoBibItem
 
     # @param name [IsoBibItem::FullName]
     # @param affiliation [Array<IsoBibItem::Affiliation>]
-    def initialize(name:, affiliation: [], contacts:)
+    def initialize(name:, affiliation: [], contacts:, identifiers: [])
       super(contacts: contacts)
       @name        = name
-      @affiliation  = affiliation
-      @identifiers = []
+      @affiliation = affiliation
+      @identifiers = identifiers
     end
 
     # @param builder [Nokogiri::XML::Builder]
@@ -100,6 +104,7 @@ module IsoBibItem
       builder.person do
         name.to_xml builder
         affiliation.each { |a| a.to_xml builder }
+        identifiers.each { |id| id.to_xml builder }
         contacts.each { |contact| contact.to_xml builder }
       end
     end

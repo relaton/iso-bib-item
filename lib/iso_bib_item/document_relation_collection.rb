@@ -49,6 +49,13 @@ module IsoBibItem
       @reference_from = reference_from
       @reference_to   = reference_to
     end
+
+    def to_xml(builder)
+      builder.locality(type: type) do
+        builder.referenceFrom { reference_from.to_xml(builder) }
+        builder.referenceTo reference_to if reference_to
+      end
+    end
   end
 
   # Documett relation
@@ -79,10 +86,13 @@ module IsoBibItem
     # @param builder [Nokogiri::XML::Builder]
     def to_xml(builder)
       builder.relation(type: type) do
-        if @bibitem.nil? 
+        if @bibitem.nil?
           builder.bibitem do
             builder.formattedref identifier
             # builder.docidentifier identifier
+          end
+          bib_locality.each do |l|
+            l.to_xml builder
           end
         else
           @bibitem.to_xml(builder, {})

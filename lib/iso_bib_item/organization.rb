@@ -47,11 +47,11 @@ module IsoBibItem
     # @param abbreviation [String]
     # @param url [String]
     # @TODO identifier
-    def initialize(name:, abbreviation: nil, url: nil)
+    def initialize(name:, abbreviation: nil, url: nil, identifiers: [])
       super(url: url)
       @name = name.is_a?(Array) ? name.map { |n| hash2locstr(n) } : [hash2locstr(name)]
       @abbreviation = LocalizedString.new abbreviation
-      @identifiers  = []
+      @identifiers  = identifiers
     end
 
     # @param builder [Nokogiri::XML::Builder]

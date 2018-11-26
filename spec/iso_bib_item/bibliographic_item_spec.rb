@@ -111,14 +111,53 @@ RSpec.describe IsoBibItem::BibliographicItem do
     expect(bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'utf-8'
   end
 
-  it 'create IsoBibliographicItem from XML' do
-    xml = File.read 'spec/examples/iso_bib_item.xml', encoding: 'utf-8'
+  it 'create IsoBibliographicItem from XML without title parts' do
+    xml = File.read 'spec/examples/iso_bib_item_no_title_parts.xml', encoding: 'utf-8'
     xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
     item = IsoBibItem::XMLParser.from_xml xml
     expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
     expect(item.to_xml).to be_equivalent_to xml
   end
 
+  it 'create IsoBibliographicItem from XML with 1 title parts' do
+    xml = File.read 'spec/examples/iso_bib_item_1_title_parts.xml', encoding: 'utf-8'
+    xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
+    item = IsoBibItem::XMLParser.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
+
+  it 'create IsoBibliographicItem from XML with 2 title parts' do
+    xml = File.read 'spec/examples/iso_bib_item_2_title_parts.xml', encoding: 'utf-8'
+    xml.gsub! '<fetched>2018-10-21</fetched>', "<fetched>#{Date.today}</fetched>"
+    item = IsoBibItem::XMLParser.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
+
+  it "create IsoBibliographicItem from XML with second Part in title parts" do
+    xml = File.read "spec/examples/iso_bib_item_part_title_parts.xml", encoding: "utf-8"
+    xml.gsub! "<fetched>2018-10-21</fetched>", "<fetched>#{Date.today}</fetched>"
+    item = IsoBibItem::XMLParser.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
+
+  it "create IsoBibliographicItem from XML with 4 title parts" do
+    xml = File.read "spec/examples/iso_bib_item_4_title_parts.xml", encoding: "utf-8"
+    xml.gsub! "<fetched>2018-10-21</fetched>", "<fetched>#{Date.today}</fetched>"
+    item = IsoBibItem::XMLParser.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
+
+  it "create IsoBibliographicItem from XML with 3 title parts" do
+    xml = File.read "spec/examples/iso_bib_item_3_title_parts.xml", encoding: "utf-8"
+    xml.gsub! "<fetched>2018-10-21</fetched>", "<fetched>#{Date.today}</fetched>"
+    item = IsoBibItem::XMLParser.from_xml xml
+    expect(item).to be_instance_of IsoBibItem::IsoBibliographicItem
+    expect(item.to_xml).to be_equivalent_to xml
+  end
 
   private
 

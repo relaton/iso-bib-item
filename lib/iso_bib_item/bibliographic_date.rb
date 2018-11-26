@@ -49,7 +49,7 @@ module IsoBibItem
     # @params date [String] 'yyyy' or 'yyyy-mm'
     def parse_date(date)
       return unless date
-      if date =~ /\d{4}/
+      if date =~ /^\d{4}$/
         Time.strptime date, '%Y'
       else
         Time.strptime date, '%Y-%m'

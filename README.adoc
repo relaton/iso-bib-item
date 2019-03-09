@@ -1,10 +1,10 @@
 = IsoBibItem
 
 image:https://img.shields.io/gem/v/iso-bib-item.svg["Gem Version", link="https://rubygems.org/gems/iso-bib-item"]
-image:https://img.shields.io/travis/metanorma/iso-bib-item/master.svg["Build Status", link="https://travis-ci.org/metanorma/iso-bib-item"]
+image:https://img.shields.io/travis/metanorma/iso-bib-item/master.svg["Build Status", link="https://travis-ci.com/metanorma/iso-bib-item"]
 image:https://codeclimate.com/github/metanorma/iso-bib-item/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/metanorma/iso-bib-item"]
 
-IsoBib is a Ruby gem that implements the https://github.com/metanorma/metanorma-models-iso#iso-bibliographic-item[IsoBibliographicItem model].
+IsoBib is a Ruby gem that implements the https://github.com/metanorma/metanorma-model-iso#iso-bibliographic-item[IsoBibliographicItem model].
 
 == Installation
 

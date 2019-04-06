@@ -224,6 +224,7 @@ module IsoBibItem
             end
           end
           language.each { |l| xml.language l }
+          script.each { |s| xml.script s }
           status&.to_xml xml
           relations.each { |r| r.to_xml xml }
           series.each { |s| s.to_xml xml } if series

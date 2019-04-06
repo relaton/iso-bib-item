@@ -65,6 +65,16 @@
   <language>en</language>
   <language>fr</language>
   <status>standard</status>
+  <relation type="updates">
+    <bibitem>
+      <formattedref>ISO 19115:2003</formattedref>
+    </bibitem>
+  </relation>
+  <relation type="updates">
+    <bibitem>
+      <formattedref>ISO 19115:2003/Cor 1:2006</formattedref>
+    </bibitem>
+  </relation>
   <series type="main">
     <title format="plain" language="en" script="Latn">ISO/IEC FDIS 10118-3</title>
   </series>

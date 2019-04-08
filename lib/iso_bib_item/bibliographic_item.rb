@@ -211,6 +211,28 @@ module IsoBibItem
       end
     end
 
+    def makeid(id, attribute, delim = '')
+      return nil if attribute && !@id_attribute
+      id = @docidentifier.reject { |i| i.type == "DOI" }[0] unless id
+      #contribs = publishers.map { |p| p&.entity&.abbreviation }.join '/'
+      #idstr = "#{contribs}#{delim}#{id.project_number}"
+      #idstr = id.project_number.to_s
+      idstr = id.id.gsub(/:/, "-")
+      #if id.part_number&.size&.positive? then idstr += "-#{id.part_number}"
+      idstr.strip
+    end
+
+    # @return [String]
+    def shortref(identifier, **opts)
+      pubdate = dates.select { |d| d.type == "published" }
+      year = if opts[:no_year] || pubdate.empty? then ""
+             else ":" + pubdate&.first&.on&.year.to_s
+             end
+      year += ": All Parts" if opts[:all_parts] || @all_parts
+
+      "#{makeid(identifier, false, ' ')}#{year}"
+    end
+
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 
     # @return [String]
@@ -221,7 +243,7 @@ module IsoBibItem
           title.each { |t| xml.title { t.to_xml xml } }
           link.each { |s| s.to_xml xml }
           docidentifier.each { |di| di.to_xml xml }
-          dates.each { |d| d.to_xml xml }
+          dates.each { |d| d.to_xml xml, full_date: true }
           contributors.each do |c|
             xml.contributor do
               c.role.each { |r| r.to_xml xml }

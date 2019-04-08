@@ -28,7 +28,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
                      type: 'technicalCommittee', number: 211
                    } },
       ics:       [{ field: 35, group: 240, subgroup: 70 }],
-      dates:     [{ type: 'published', from: '2014-04' }],
+      dates:     [{ type: 'published', on: '2014-04' }],
       abstract:  [
         { content: 'ISO 19115-1:2014 defines the schema required for ...',
           language: 'en', script: 'Latn', type: 'plain' },
@@ -106,6 +106,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
   it 'create BibliographicItem' do
     expect(bib_item).to be_instance_of IsoBibItem::BibliographicItem
     expect(bib_item.title).to be_instance_of Array
+    expect(bib_item.shortref( bib_item.docidentifier.first)).to eq "TC211:2014"
     file = 'spec/examples/bib_item.xml'
     File.write file, bib_item.to_xml, encoding: 'utf-8' unless File.exist? file
     expect(bib_item.to_xml).to be_equivalent_to File.read file, encoding: 'utf-8'

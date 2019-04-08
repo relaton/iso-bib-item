@@ -232,17 +232,6 @@ module IsoBibItem
       end
     end
 
-    # @return [String]
-    def shortref(identifier, **opts)
-      pubdate = dates.select { |d| d.type == "published" }
-      year = if opts[:no_year] || pubdate.empty? then ""
-             else ":" + pubdate&.first&.on&.year&.to_s
-             end
-      year += ": All Parts" if opts[:all_parts] || @all_parts
-
-      "#{makeid(identifier, false, ' ')}#{year}"
-    end
-
     # @param type [Symbol] type of url, can be :src/:obp/:rss
     # @return [String]
     def url(type = :src)

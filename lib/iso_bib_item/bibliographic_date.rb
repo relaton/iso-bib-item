@@ -28,21 +28,29 @@ module IsoBibItem
       @to   = parse_date to
     end
 
-    # rubocop:disable Metric/AbcSize
+    # rubocop:disable Metrics/AbcSize
 
     # @param builder [Nokogiri::XML::Builder]
     # @return [Nokogiri::XML::Builder]
     def to_xml(builder, **opts)
       builder.date(type: type) do
         if on
-          builder.on(opts[:no_year] ? '--' : on.year)
-        else
-          builder.from(opts[:no_year] ? '--' : from.year)
-          builder.to to.year if to
+          date = opts[:full_date] ? on.strftime("%Y-%m") : on.year
+          builder.on(opts[:no_year] ? '--' : date)
+        elsif from
+          if opts[:full_date]
+            date_form = from.strftime("%Y-%m")
+            date_to = to.strftime("%Y-%m") if to
+          else
+            date_form = from.year
+            date_to = to.year if to
+          end
+          builder.from(opts[:no_year] ? '--' : date_form)
+          builder.to date_to if to
         end
       end
     end
-    # rubocop:enable Metric/AbcSize
+    # rubocop:enable Metrics/AbcSize
 
     private
 

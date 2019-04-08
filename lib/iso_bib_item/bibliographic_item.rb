@@ -189,6 +189,11 @@ module IsoBibItem
         a.is_a?(Hash) ? FormattedString.new(a) : a
       end
       @relations = DocRelationCollection.new(args[:relations] || [])
+      if args[:copyright]
+        @copyright = if args[:copyright].is_a?(Hash)
+                       CopyrightAssociation.new args[:copyright]
+                     else args[:copyright] end
+      end
       @link = args[:link].map { |s| s.is_a?(Hash) ? TypedUri.new(s) : s }
       @series = args[:series]
       @fetched = args.fetch :fetched, Date.today
@@ -226,7 +231,8 @@ module IsoBibItem
           language.each { |l| xml.language l }
           script.each { |s| xml.script s }
           abstract.each { |a| xml.abstract { a.to_xml(xml) } }
-          status&.to_xml xml
+          status.to_xml xml if status
+          copyright.to_xml xml if copyright
           relations.each { |r| r.to_xml xml }
           series.each { |s| s.to_xml xml } if series
         end

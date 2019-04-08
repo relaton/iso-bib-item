@@ -167,7 +167,7 @@ module IsoBibItem
     def initialize(**args)
       super_args = args.select do |k|
         %i[
-          id language script dates abstract contributors relations link
+          id language script dates abstract contributors relations copyright link
         ].include? k
       end
       super(super_args)
@@ -189,11 +189,6 @@ module IsoBibItem
                      else args[:workgroup] end
       end
       @ics = args[:ics].map { |i| i.is_a?(Hash) ? Ics.new(i) : i }
-      if args[:copyright]
-        @copyright = if args[:copyright].is_a?(Hash)
-                       CopyrightAssociation.new args[:copyright]
-                     else args[:copyright] end
-      end
       @link = args[:link].map { |s| s.is_a?(Hash) ? TypedUri.new(s) : s }
       @id_attribute = true
     end
@@ -311,9 +306,9 @@ module IsoBibItem
         script.each { |s| builder.script s }
         abstract.each { |a| builder.abstract { a.to_xml(builder) } }
         status.to_xml builder
-        copyright&.to_xml builder
+        copyright.to_xml builder if copyright
         relations.each { |r| r.to_xml builder }
-        workgroup&.to_xml builder
+        workgroup.to_xml builder if workgroup
         if opts[:note]
           builder.note("ISO DATE: #{opts[:note]}", format: 'text/plain')
         end

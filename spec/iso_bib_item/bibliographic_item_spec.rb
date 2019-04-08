@@ -104,7 +104,7 @@ RSpec.describe IsoBibItem::BibliographicItem do
   end
 
   it 'create BibliographicItem' do
-    expect(bib_item).to  be_instance_of IsoBibItem::BibliographicItem
+    expect(bib_item).to be_instance_of IsoBibItem::BibliographicItem
     expect(bib_item.title).to be_instance_of Array
     file = 'spec/examples/bib_item.xml'
     File.write file, bib_item.to_xml, encoding: 'utf-8' unless File.exist? file

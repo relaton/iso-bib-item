@@ -3,7 +3,7 @@ PATH
   specs:
     iso-bib-item (0.4.5)
       isoics (~> 0.1.6)
-      nokogiri (~> 1.8.4)
+      nokogiri
       ruby_deep_clone (~> 0.8.0)
 
 GEM

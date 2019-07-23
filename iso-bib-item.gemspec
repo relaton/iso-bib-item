@@ -14,6 +14,10 @@ Gem::Specification.new do |spec|
   spec.description   = %(IsoBibItem: Ruby ISOXMLDOC impementation.)
   spec.homepage      = 'https://github.com/metanorma/iso-bib-item'
   spec.license       = 'BSD-2-Clause'
+  spec.post_install_message  = %q{
+    The gem is deprecated!
+    Please use `relaton-bib` and `relaton-iso-bib`.
+  }
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

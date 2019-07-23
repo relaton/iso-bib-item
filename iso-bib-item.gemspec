@@ -31,6 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "equivalent-xml", "~> 0.6"
 
   spec.add_dependency 'isoics', '~> 0.1.6'
-  spec.add_dependency 'nokogiri', "~> 1.8.4"
+  spec.add_dependency 'nokogiri'
   spec.add_dependency 'ruby_deep_clone', "~> 0.8.0"
 end
